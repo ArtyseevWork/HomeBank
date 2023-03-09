@@ -5,19 +5,24 @@ import com.mordansoft.homebank.data.model.PurchaseD
 
 @Dao
 interface PurchaseDao {
+
+
+    @Query("SELECT * FROM purchase WHERE :query")
+    fun getPurchaseByQuery(query: String): ArrayList<PurchaseD>
+
     @Query("SELECT * FROM purchase")
     fun getAll(): List<PurchaseD>
 
-    @Query("SELECT * FROM purchase WHERE title LIKE :title")
-    fun findByTitle(title: String): PurchaseD
+    @Query("SELECT * FROM purchase WHERE id = :purchaseId")
+    fun getPurchaseById(purchaseId: Long): PurchaseD
 
     @Insert
     fun insertAll(vararg todo: PurchaseD)
 
     @Delete
-    fun delete(todo: PurchaseD)
+    fun deletePurchase(purchase: PurchaseD)
 
     @Update
-    fun updateTodo(vararg todos: PurchaseD)
+    fun updatePurchase(vararg purchase: PurchaseD)
 
 }
