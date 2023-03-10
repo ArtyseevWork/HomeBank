@@ -3,4 +3,21 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="sampleText">sampleText</string>
+    <string name="sampleNumber">8000</string>
+    <string name="budget">budget</string>
+    <string name="spent">spent</string>
+    <string name="balance">balance</string>
+    <string name="plan">plan</string>
+    <string name="fact">fact</string>
+    <string name="add">add</string>
+    <string name="menu">menu</string>
+    <string name="profits">profits</string>
+    <string name="planned">planned</string>
+    <string name="postponed">postpound</string>
+    <string name="bought">bought</string>
+    <string name="properties">properties</string>
+    <string name="closePeriod">closePeriod</string>
+    <string name="clearPeriod">clearPeriod</string>
+    <string name="exitFromProfile">exitFromProfile</string>
 </resources>

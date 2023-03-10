@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/menuProperties"
+            android:icon="@android:drawable/sym_action_email"
+            android:title="@string/properties" />
+        <item
+            android:id="@+id/menuClosePeriod"
+            android:icon="@android:drawable/sym_action_email"
+            android:title="@string/closePeriod" />
+        <item
+            android:id="@+id/menuClearPeriod"
+            android:icon="@android:drawable/ic_menu_edit"
+            android:title="@string/clearPeriod" />
+    </group>
+    <item android:title="Тест">
+        <menu>
+            <item
+                android:id="@+id/menuAuth"
+                android:icon="@android:drawable/ic_menu_help"
+                android:title="Корзина"/>
+            <item
+                android:id="@+id/menuAuthExit"
+                android:icon="@android:drawable/ic_menu_help"
+                android:title="@string/exitFromProfile" />
+            <item
+                android:id="@+id/test1"
+                android:icon="@android:drawable/ic_menu_help"
+                android:title="test1"/>
+            <item
+                android:id="@+id/test2"
+                android:icon="@android:drawable/ic_menu_help"
+                android:title="test2"/>
+        </menu>
+    </item>
+
+</menu>
