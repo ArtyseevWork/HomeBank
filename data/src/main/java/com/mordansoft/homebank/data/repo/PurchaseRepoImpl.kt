@@ -1,13 +1,12 @@
 package com.mordansoft.homebank.data.repo
 
+
 import com.mordansoft.homebank.data.model.PurchaseD
 import com.mordansoft.homebank.data.storage.PurchaseDao
-import com.mordansoft.homebank.data.storage.PurchaseStorage
 import com.mordansoft.homebank.domain.model.Purchase
 import com.mordansoft.homebank.domain.repo.PurchaseRepo
 
 class PurchaseRepoImpl (private val purchaseDao: PurchaseDao) : PurchaseRepo {
-
 
     override fun deletePurchase(purchase: Purchase) {
         return purchaseDao.deletePurchase(purchaseToPurchaseD(purchase))
@@ -23,6 +22,17 @@ class PurchaseRepoImpl (private val purchaseDao: PurchaseDao) : PurchaseRepo {
 
     override fun getPurchasesByQuery(query: String): ArrayList<Purchase> {
         return purchaseDToPurchaseArray(purchaseDao.getPurchaseByQuery(query));
+    }
+
+    override fun insertTestPurchase(){
+        for ( i in 1..100){
+            try{
+                purchaseDao.insertAll(PurchaseD(id = i.toLong()))
+            } catch (e: Exception){
+                println("$i - id already exist")
+            }
+
+        }
     }
 
     /*********** mappers  ************/
@@ -58,7 +68,7 @@ class PurchaseRepoImpl (private val purchaseDao: PurchaseDao) : PurchaseRepo {
         )
     }
 
-    private fun purchaseDToPurchaseArray(arrayPurchasesD: ArrayList<PurchaseD>): ArrayList<Purchase> {
+    private fun purchaseDToPurchaseArray(arrayPurchasesD: List<PurchaseD>): ArrayList<Purchase> {
         var purchases = ArrayList<Purchase>()
         for (e in arrayPurchasesD) {
             purchases.add(purchaseDToPurchase(e))

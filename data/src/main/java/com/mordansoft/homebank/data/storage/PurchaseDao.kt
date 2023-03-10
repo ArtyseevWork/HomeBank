@@ -1,5 +1,6 @@
 package com.mordansoft.homebank.data.storage
 
+
 import androidx.room.*
 import com.mordansoft.homebank.data.model.PurchaseD
 
@@ -8,7 +9,7 @@ interface PurchaseDao {
 
 
     @Query("SELECT * FROM purchase WHERE :query")
-    fun getPurchaseByQuery(query: String): ArrayList<PurchaseD>
+    fun getPurchaseByQuery(query: String): List<PurchaseD>
 
     @Query("SELECT * FROM purchase")
     fun getAll(): List<PurchaseD>
