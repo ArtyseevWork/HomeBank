@@ -7,4 +7,6 @@ interface PurchaseRepo {
     fun updatePurchase(purchase: Purchase)
     fun getPurchaseById(purchaseId: Long): Purchase
     fun getPurchasesByQuery(query: String): ArrayList<Purchase>
+
+    fun insertTestPurchase(){    }
 }
