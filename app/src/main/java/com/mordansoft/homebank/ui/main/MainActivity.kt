@@ -1,4 +1,4 @@
-package com.mordansoft.homebank.ui
+package com.mordansoft.homebank.ui.main
 
 import android.app.Application
 import android.content.Intent
@@ -7,7 +7,6 @@ import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.annotation.Nullable
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
@@ -20,8 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.navigation.NavigationView
 import com.mordansoft.homebank.R
 import com.mordansoft.homebank.domain.model.Purchase
-import com.mordansoft.homebank.ui.main.MainViewModel
-import com.mordansoft.homebank.ui.main.MainViewModelFactory
+import com.mordansoft.homebank.ui.StubActivity
 
 
 class MainActivity : AppCompatActivity() {
@@ -38,9 +36,19 @@ class MainActivity : AppCompatActivity() {
     //var profitsQuery: Query? = null
     //var onlineMode = false
     override fun onCreate(savedInstanceState: Bundle?) {
-        mMyApp = this.applicationContext as Application
         setContentView(R.layout.activity_main_new)
         super.onCreate(savedInstanceState)
+
+        vm = ViewModelProvider(this, MainViewModelFactory
+            (this.applicationContext as Application))[MainViewModel::class.java]
+
+
+        vm.getMainPurchasesMutableLiveData().observe(this,mainPurchasesObserver)
+
+        //createRecyclerView(R.id.mainPurchasesRecyclerView)
+
+
+
         //periodId = mMyApp.getCurrentPeriod()
         //onlineMode = mMyApp.getOnlineMode()
         //val profitsMode: Int = mMyApp.getProfitsMode()
@@ -82,11 +90,10 @@ class MainActivity : AppCompatActivity() {
         buttonsPeriodAvailable()
         val query = "parent_id = " + "\"" + "main" + "\"" + " order by timestamp desc"*/
 
-        vm = ViewModelProvider(this, MainViewModelFactory
-            (this))[MainViewModel::class.java]
+
 
         //listPurchases = Purchase.getPurchasesFromDatabase(this, query, periodId)
-        createRecyclerView(R.id.mainPurchasesRecyclerView)
+
         /******** left menu  *********/
         val drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
         val navigationView = findViewById<NavigationView>(R.id.nav_view)
@@ -115,7 +122,7 @@ class MainActivity : AppCompatActivity() {
     private val mainPurchasesObserver: Observer<ArrayList<Purchase>> =
         Observer<ArrayList<Purchase>> { newMainPurchases -> // Update the UI, in this case, a TextView.
             listPurchases = newMainPurchases
-            //updateUi()
+            createRecyclerView()
         }
 
 
@@ -135,17 +142,17 @@ class MainActivity : AppCompatActivity() {
         }
     }*/
 
-    fun createRecyclerView(view: Int) {
+    fun createRecyclerView() {
         val linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true)
         linearLayoutManager.reverseLayout = false
         linearLayoutManager.stackFromEnd = false
-        recyclerView = findViewById(view)
+        recyclerView = findViewById(R.id.mainPurchasesRecyclerView)
         recyclerView.setHasFixedSize(false)
         recyclerView.setLayoutManager(linearLayoutManager)
         adapter = PurchaseAdapter(listPurchases, this)
         recyclerView.setAdapter(adapter)
         adapter.setListener(
-            object : PurchaseAdapter.Listener{
+            object : PurchaseAdapter.Listener {
                 override fun onClick(view: View, position: Long) {
                     val intent = Intent(view.context, StubActivity::class.java)
                     intent.putExtra("EXTRA_PURCHASE_ID", position)

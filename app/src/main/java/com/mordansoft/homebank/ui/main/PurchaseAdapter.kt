@@ -1,4 +1,4 @@
-package com.mordansoft.homebank.ui
+package com.mordansoft.homebank.ui.main
 
 import android.content.Context
 import android.view.LayoutInflater

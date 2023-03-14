@@ -1,12 +1,18 @@
 package com.mordansoft.homebank.data.repo
 
 
+import androidx.annotation.WorkerThread
 import com.mordansoft.homebank.data.model.PurchaseD
 import com.mordansoft.homebank.data.storage.PurchaseDao
 import com.mordansoft.homebank.domain.model.Purchase
 import com.mordansoft.homebank.domain.repo.PurchaseRepo
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
 
-class PurchaseRepoImpl (private val purchaseDao: PurchaseDao) : PurchaseRepo {
+class PurchaseRepoImpl (private val purchaseDao: PurchaseDao,
+                        private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default) : PurchaseRepo {
+
+
 
     override fun deletePurchase(purchase: Purchase) {
         return purchaseDao.deletePurchase(purchaseToPurchaseD(purchase))
@@ -19,9 +25,14 @@ class PurchaseRepoImpl (private val purchaseDao: PurchaseDao) : PurchaseRepo {
     override fun getPurchaseById(purchaseId: Long): Purchase {
         return purchaseDToPurchase(purchaseDao.getPurchaseById(purchaseId));
     }
-
-    override fun getPurchasesByQuery(query: String): ArrayList<Purchase> {
-        return purchaseDToPurchaseArray(purchaseDao.getPurchaseByQuery(query));
+    override fun getPurchasesByQuery(query: String): ArrayList<Purchase>{
+        var x: ArrayList<Purchase> = ArrayList()
+        runBlocking {
+            launch {
+                x = purchaseDToPurchaseArray(purchaseDao.getPurchaseByQuery(query));
+            }
+        }
+        return x
     }
 
     override fun insertTestPurchase(){
