@@ -42,9 +42,9 @@ class MainActivity : AppCompatActivity() {
         vm = ViewModelProvider(this, MainViewModelFactory
             (this.applicationContext as Application))[MainViewModel::class.java]
 
-
-        vm.getMainPurchasesMutableLiveData().observe(this,mainPurchasesObserver)
-
+        vm.getPurchase();
+        //vm.getMainPurchasesMutableLiveData().observe(this,mainPurchasesObserver)
+        vm.purchases.observe(this,mainPurchasesObserver)
         //createRecyclerView(R.id.mainPurchasesRecyclerView)
 
 

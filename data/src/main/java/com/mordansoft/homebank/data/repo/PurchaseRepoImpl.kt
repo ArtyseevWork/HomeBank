@@ -12,30 +12,30 @@ import kotlinx.coroutines.Dispatchers.IO
 class PurchaseRepoImpl (private val purchaseDao: PurchaseDao,
                         private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default) : PurchaseRepo {
 
-
-
-    override fun deletePurchase(purchase: Purchase) {
+    override suspend fun deletePurchase(purchase: Purchase) {
         return purchaseDao.deletePurchase(purchaseToPurchaseD(purchase))
     }
 
-    override fun updatePurchase(purchase: Purchase) {
+    override suspend fun updatePurchase(purchase: Purchase) {
         return purchaseDao.updatePurchase(purchaseToPurchaseD(purchase))
     }
 
-    override fun getPurchaseById(purchaseId: Long): Purchase {
+    override suspend fun getPurchaseById(purchaseId: Long): Purchase {
         return purchaseDToPurchase(purchaseDao.getPurchaseById(purchaseId));
     }
-    override fun getPurchasesByQuery(query: String): ArrayList<Purchase>{
+
+    override suspend fun getAllPurchases(): ArrayList<Purchase> {
+        return purchaseDToPurchaseArray(purchaseDao.getAll())
+    }
+    override suspend fun getPurchasesByQuery(query: String): ArrayList<Purchase>{
         var x: ArrayList<Purchase> = ArrayList()
-        runBlocking {
-            launch {
-                x = purchaseDToPurchaseArray(purchaseDao.getPurchaseByQuery(query));
-            }
+        withContext(defaultDispatcher) {
+            x = purchaseDToPurchaseArray(purchaseDao.getPurchaseByQuery(query));
         }
         return x
     }
 
-    override fun insertTestPurchase(){
+    override suspend fun insertTestPurchase(){
         for ( i in 1..100){
             try{
                 purchaseDao.insertAll(PurchaseD(id = i.toLong()))

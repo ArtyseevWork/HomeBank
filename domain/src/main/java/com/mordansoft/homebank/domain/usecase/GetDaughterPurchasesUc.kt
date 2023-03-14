@@ -5,7 +5,7 @@ import com.mordansoft.homebank.domain.repo.PurchaseRepo
 
 class GetDaughterPurchasesUc(private val purchaseRepo: PurchaseRepo) {
 
-    fun execute(purchase: Purchase): ArrayList<Purchase> {
+    suspend fun execute(purchase: Purchase): ArrayList<Purchase> {
         val parentId = purchase.parentId
         return purchaseRepo.getPurchasesByQuery("parentId = $parentId")
     }

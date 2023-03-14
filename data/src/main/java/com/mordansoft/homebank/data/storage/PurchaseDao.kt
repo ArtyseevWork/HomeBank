@@ -9,21 +9,21 @@ interface PurchaseDao {
 
 
     @Query("SELECT * FROM purchase WHERE :query")
-    fun getPurchaseByQuery(query: String): List<PurchaseD>
+    suspend fun getPurchaseByQuery(query: String): List<PurchaseD>
 
     @Query("SELECT * FROM purchase")
-    fun getAll(): List<PurchaseD>
+    suspend fun getAll(): List<PurchaseD>
 
     @Query("SELECT * FROM purchase WHERE id = :purchaseId")
-    fun getPurchaseById(purchaseId: Long): PurchaseD
+    suspend fun getPurchaseById(purchaseId: Long): PurchaseD
 
     @Insert
-    fun insertAll(vararg todo: PurchaseD)
+    suspend fun insertAll(vararg todo: PurchaseD)
 
     @Delete
-    fun deletePurchase(purchase: PurchaseD)
+    suspend fun deletePurchase(purchase: PurchaseD)
 
     @Update
-    fun updatePurchase(vararg purchase: PurchaseD)
+    suspend fun updatePurchase(vararg purchase: PurchaseD)
 
 }

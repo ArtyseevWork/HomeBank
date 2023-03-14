@@ -5,7 +5,7 @@ import com.mordansoft.homebank.domain.repo.PurchaseRepo
 
 class SetPurchaseUc(private val purchaseRepo: PurchaseRepo) {
 
-    fun execute(purchase: Purchase){
+    suspend fun execute(purchase: Purchase){
         purchaseRepo.updatePurchase(purchase)
     }
 }

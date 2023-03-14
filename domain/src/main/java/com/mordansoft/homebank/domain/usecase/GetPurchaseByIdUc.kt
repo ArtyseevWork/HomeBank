@@ -5,7 +5,7 @@ import com.mordansoft.homebank.domain.repo.PurchaseRepo
 
 class GetPurchaseByIdUc(private val purchaseRepo: PurchaseRepo) {
 
-    fun execute(purchaseId: Long): Purchase{
+    suspend fun execute(purchaseId: Long): Purchase{
         return purchaseRepo.getPurchaseById(purchaseId = purchaseId)
     }
 }
