@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "461092284362",
+    "project_id": "homebank-8",
+    "storage_bucket": "homebank-8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:461092284362:android:037136f7fb23359ff79133",
+        "android_client_info": {
+          "package_name": "com.mordansoft.homebank"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "461092284362-fosrs42kg4vuoeuqkg5l0hlo6nvfjp1j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfb45AJO58tJ6nYSAHGWNQH1CW_T7ublg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "461092284362-fosrs42kg4vuoeuqkg5l0hlo6nvfjp1j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
