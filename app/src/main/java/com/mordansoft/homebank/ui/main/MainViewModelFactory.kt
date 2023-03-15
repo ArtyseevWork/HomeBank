@@ -11,17 +11,7 @@ import com.mordansoft.homebank.domain.usecase.GetMainPurchasesUc
 
 
 
-class MainViewModelFactory(application: Application):  ViewModelProvider.Factory {
-
-
-    private val purchaseRepo: PurchaseRepo
-    private val getMainPurchasesUc: GetMainPurchasesUc
-
-    init {
-        purchaseRepo =
-            PurchaseRepoImpl(AppDatabase.getDatabase(application).purchaseDao())
-            getMainPurchasesUc = GetMainPurchasesUc(purchaseRepo)
-    }
+class MainViewModelFactory(val getMainPurchasesUc: GetMainPurchasesUc):  ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return MainViewModel(

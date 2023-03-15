@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.navigation.NavigationView
 import com.mordansoft.homebank.R
+import com.mordansoft.homebank.app.App
 import com.mordansoft.homebank.domain.model.Purchase
 import com.mordansoft.homebank.ui.StubActivity
 
@@ -30,6 +31,9 @@ class MainActivity : AppCompatActivity() {
     private var filterStatus = 0
     private lateinit var adapter: PurchaseAdapter
     private lateinit var vm : MainViewModel
+
+    @javax.inject.Inject
+    lateinit var vmFactory: MainViewModelFactory
     //var purchaseEventListener: ChildEventListener? = null
     //var purchasesQuery: Query? = null
     //var profitsEventListener: ChildEventListener? = null
@@ -39,8 +43,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main_new)
         super.onCreate(savedInstanceState)
 
-        vm = ViewModelProvider(this, MainViewModelFactory
-            (this.applicationContext as Application))[MainViewModel::class.java]
+        (applicationContext as App).appComponent.inject(this)
+
+        vm = ViewModelProvider(this, vmFactory)[MainViewModel::class.java]
 
         vm.getPurchase();
         //vm.getMainPurchasesMutableLiveData().observe(this,mainPurchasesObserver)
