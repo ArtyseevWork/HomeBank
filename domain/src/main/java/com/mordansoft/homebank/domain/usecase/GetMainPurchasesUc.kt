@@ -6,12 +6,12 @@ import com.mordansoft.homebank.domain.repo.PurchaseRepo
 class GetMainPurchasesUc(val purchaseRepo: PurchaseRepo) {
 
     suspend fun execute(): ArrayList<Purchase> {
-       // val parentId = -8
-       // val x = purchaseRepo.getPurchasesByQuery("parentId = $parentId")
-        val x = purchaseRepo.getAllPurchases()
-        return x
+        purchaseRepo.insertTestPurchase()
+        val parentId : Long = -8
+        val periodId : Long = -8
+        return purchaseRepo.getMainPurchases(parentId = parentId,
+                                             periodId = periodId)
     }
-
 
 }
 

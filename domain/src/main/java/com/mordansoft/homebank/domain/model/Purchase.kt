@@ -8,8 +8,8 @@ data class Purchase(
     val description: String = "Your description",
     val price: Float = 100f,
     val count: Float = 1f,
-    val period: Int = -8,
-    val status: Int  = -8,
+    val periodId: Int = -8,
+    val statusId: Int  = -8,
     val parentId: Long = -8,
     val repeater: Boolean  = false,
     val timestamp: Long = 0)

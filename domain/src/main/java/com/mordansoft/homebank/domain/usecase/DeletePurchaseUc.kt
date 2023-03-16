@@ -6,6 +6,6 @@ import com.mordansoft.homebank.domain.repo.PurchaseRepo
 class DeletePurchaseUc(private val purchaseRepo: PurchaseRepo) {
 
     suspend fun execute(purchase: Purchase){
-        return purchaseRepo.deletePurchase(purchase)
+        //todo
     }
 }

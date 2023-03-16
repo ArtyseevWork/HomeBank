@@ -7,32 +7,34 @@ import com.mordansoft.homebank.data.storage.PurchaseDao
 import com.mordansoft.homebank.domain.model.Purchase
 import com.mordansoft.homebank.domain.repo.PurchaseRepo
 import kotlinx.coroutines.*
-import kotlinx.coroutines.Dispatchers.IO
 
 class PurchaseRepoImpl (private val purchaseDao: PurchaseDao,
                         private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default) : PurchaseRepo {
 
-    override suspend fun deletePurchase(purchase: Purchase) {
-        return purchaseDao.deletePurchase(purchaseToPurchaseD(purchase))
-    }
-
     override suspend fun updatePurchase(purchase: Purchase) {
         return purchaseDao.updatePurchase(purchaseToPurchaseD(purchase))
+    }
+
+    override suspend fun getMainPurchases(parentId: Long, periodId: Long): ArrayList<Purchase> {
+        var resultList: ArrayList<Purchase>
+        withContext(defaultDispatcher) {
+            resultList = purchaseDToPurchaseArray(purchaseDao.getMainPurchases(parentId = parentId,
+                                                                               periodId = periodId))
+        }
+        return resultList
     }
 
     override suspend fun getPurchaseById(purchaseId: Long): Purchase {
         return purchaseDToPurchase(purchaseDao.getPurchaseById(purchaseId));
     }
 
-    override suspend fun getAllPurchases(): ArrayList<Purchase> {
-        return purchaseDToPurchaseArray(purchaseDao.getAll())
-    }
-    override suspend fun getPurchasesByQuery(query: String): ArrayList<Purchase>{
-        var x: ArrayList<Purchase> = ArrayList()
+
+    override suspend fun getDaughterPurchases(parentId : Long): ArrayList<Purchase> {
+        var resultList: ArrayList<Purchase>
         withContext(defaultDispatcher) {
-            x = purchaseDToPurchaseArray(purchaseDao.getPurchaseByQuery(query));
+            resultList = purchaseDToPurchaseArray(purchaseDao.getDaughterPurchases(parentId));
         }
-        return x
+        return resultList
     }
 
     override suspend fun insertTestPurchase(){
@@ -42,7 +44,6 @@ class PurchaseRepoImpl (private val purchaseDao: PurchaseDao,
             } catch (e: Exception){
                 println("$i - id already exist")
             }
-
         }
     }
 
@@ -55,8 +56,8 @@ class PurchaseRepoImpl (private val purchaseDao: PurchaseDao,
             description = purchase.description,
             price       = purchase.price,
             count       = purchase.count,
-            period      = purchase.period,
-            status      = purchase.status,
+            periodId    = purchase.periodId,
+            statusId    = purchase.statusId,
             parentId    = purchase.parentId,
             repeater    = purchase.repeater,
             timestamp   = purchase.timestamp
@@ -71,16 +72,16 @@ class PurchaseRepoImpl (private val purchaseDao: PurchaseDao,
             description = purchaseD.description,
             price       = purchaseD.price,
             count       = purchaseD.count,
-            period      = purchaseD.period,
-            status      = purchaseD.status,
+            periodId    = purchaseD.periodId,
+            statusId    = purchaseD.statusId,
             parentId    = purchaseD.parentId,
             repeater    = purchaseD.repeater,
             timestamp   = purchaseD.timestamp
         )
     }
 
-    private fun purchaseDToPurchaseArray(arrayPurchasesD: List<PurchaseD>): ArrayList<Purchase> {
-        var purchases = ArrayList<Purchase>()
+    private fun purchaseDToPurchaseArray(arrayPurchasesD: Array<PurchaseD>): ArrayList<Purchase> {
+        val purchases = ArrayList<Purchase>()
         for (e in arrayPurchasesD) {
             purchases.add(purchaseDToPurchase(e))
         }

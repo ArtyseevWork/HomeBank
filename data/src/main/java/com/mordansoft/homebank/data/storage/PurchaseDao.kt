@@ -7,12 +7,19 @@ import com.mordansoft.homebank.data.model.PurchaseD
 @Dao
 interface PurchaseDao {
 
+    /*@Query("SELECT * FROM purchase WHERE :query")
+    suspend fun getPurchasesByQuery(query: String): Array<PurchaseD>*/
 
-    @Query("SELECT * FROM purchase WHERE :query")
-    suspend fun getPurchaseByQuery(query: String): List<PurchaseD>
 
-    @Query("SELECT * FROM purchase")
-    suspend fun getAll(): List<PurchaseD>
+    @Query("SELECT * FROM purchase where statusId < 400")
+    suspend fun getAllActivePurchases(): Array<PurchaseD>
+
+    @Query("SELECT * FROM purchase where parentId = :parentId and periodId = :periodId")
+    suspend fun getMainPurchases(parentId : Long, periodId : Long): Array<PurchaseD>
+
+
+    @Query("SELECT * FROM purchase WHERE parentId = :parentId")
+    suspend fun getDaughterPurchases(parentId: Long): Array<PurchaseD>
 
     @Query("SELECT * FROM purchase WHERE id = :purchaseId")
     suspend fun getPurchaseById(purchaseId: Long): PurchaseD

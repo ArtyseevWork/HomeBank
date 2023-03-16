@@ -38,16 +38,16 @@ class PurchaseAdapter(listPurchase: ArrayList<Purchase>, mContext: Context) :
         val purchase: Purchase = listPurchase[i]
         val cardView = viewHolder.cardView
         viewHolder.v_price.text = (purchase.price * purchase.count).toString()
-        if (purchase.status === 100) {
+        if (purchase.statusId === 100) {
             viewHolder.v_border.background =
                 ContextCompat.getDrawable(mContext, R.drawable.ic_fill_100)
-        } else if (purchase.status === 200) {
+        } else if (purchase.statusId === 200) {
             viewHolder.v_border.background =
                 ContextCompat.getDrawable(mContext, R.drawable.ic_fill_200)
-        } else if (purchase.status === 300) {
+        } else if (purchase.statusId === 300) {
             viewHolder.v_border.background =
                 ContextCompat.getDrawable(mContext, R.drawable.ic_fill_300)
-        } else if (purchase.status === 400) {
+        } else if (purchase.statusId === 400) {
             viewHolder.v_border.background =
                 ContextCompat.getDrawable(mContext, R.drawable.ic_fill_400)
         }

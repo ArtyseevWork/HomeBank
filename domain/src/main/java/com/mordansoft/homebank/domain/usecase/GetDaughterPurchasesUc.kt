@@ -7,6 +7,6 @@ class GetDaughterPurchasesUc(private val purchaseRepo: PurchaseRepo) {
 
     suspend fun execute(purchase: Purchase): ArrayList<Purchase> {
         val parentId = purchase.parentId
-        return purchaseRepo.getPurchasesByQuery("parentId = $parentId")
+        return purchaseRepo.getDaughterPurchases(parentId)
     }
 }
