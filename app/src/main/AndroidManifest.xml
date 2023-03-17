@@ -13,6 +13,12 @@
         android:theme="@style/Theme.HomeBank"
         tools:targetApi="31">
         <activity
+            android:name=".ui.profit.ProfitActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.profits.ProfitsActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.purchase.PurchaseActivity"
             android:exported="false" />
         <activity

@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mordansoft.homebank.domain.model.Purchase
-import com.mordansoft.homebank.domain.usecase.*
+import com.mordansoft.homebank.domain.usecase.purchase.*
 import kotlinx.coroutines.launch
 
 class PurchaseViewModel(private val getPurchaseByIdUc       : GetPurchaseByIdUc,

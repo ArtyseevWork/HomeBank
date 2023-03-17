@@ -1,4 +1,4 @@
-package com.mordansoft.homebank.domain.usecase
+package com.mordansoft.homebank.domain.usecase.purchase
 
 import com.mordansoft.homebank.domain.model.Purchase
 import com.mordansoft.homebank.domain.repo.PurchaseRepo

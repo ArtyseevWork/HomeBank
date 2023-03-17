@@ -2,9 +2,12 @@ package com.mordansoft.homebank.di
 
 import android.content.Context
 import com.mordansoft.homebank.app.App
+import com.mordansoft.homebank.data.repo.ProfitRepoImpl
 import com.mordansoft.homebank.data.repo.PurchaseRepoImpl
 import com.mordansoft.homebank.data.storage.AppDatabase
+import com.mordansoft.homebank.data.storage.ProfitDao
 import com.mordansoft.homebank.data.storage.PurchaseDao
+import com.mordansoft.homebank.domain.repo.ProfitRepo
 import com.mordansoft.homebank.domain.repo.PurchaseRepo
 import dagger.Module
 import dagger.Provides
@@ -15,6 +18,16 @@ class DataModule {
     @Provides
     fun providePurchaseRepo(purchaseDao: PurchaseDao) : PurchaseRepo {
         return PurchaseRepoImpl(purchaseDao)
+    }
+
+    @Provides
+    fun provideProfitRepo(profitDao: ProfitDao) : ProfitRepo{
+        return ProfitRepoImpl(profitDao)
+    }
+
+    @Provides
+    fun provideProfitDao(appDatabase: AppDatabase) : ProfitDao {
+        return appDatabase.profitDao()
     }
     @Provides
     fun providePurchaseDao(appDatabase: AppDatabase) : PurchaseDao {

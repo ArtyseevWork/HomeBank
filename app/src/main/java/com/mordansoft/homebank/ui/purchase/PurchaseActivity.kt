@@ -4,15 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.DisplayMetrics
 import android.view.View
-import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,9 +21,8 @@ import com.mordansoft.homebank.domain.model.Period
 import com.mordansoft.homebank.domain.model.Purchase
 import com.mordansoft.homebank.ui.StubActivity
 import com.mordansoft.homebank.ui.main.MainActivity
-import com.mordansoft.homebank.ui.main.MainViewModel
-import com.mordansoft.homebank.ui.main.MainViewModelFactory
 import com.mordansoft.homebank.ui.main.PurchaseAdapter
+import com.mordansoft.homebank.ui.profit.PurchaseViewModel
 
 class PurchaseActivity : AppCompatActivity() {
     //private int periodId;

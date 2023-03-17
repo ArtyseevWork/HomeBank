@@ -1,13 +1,9 @@
 package com.mordansoft.homebank.ui.main
 
-import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
-import com.mordansoft.homebank.data.repo.PurchaseRepoImpl
-import com.mordansoft.homebank.data.storage.AppDatabase
-import com.mordansoft.homebank.domain.repo.PurchaseRepo
-import com.mordansoft.homebank.domain.usecase.GetMainPurchasesUc
+import com.mordansoft.homebank.domain.usecase.purchase.GetMainPurchasesUc
 
 
 

@@ -21,6 +21,7 @@ import com.mordansoft.homebank.R
 import com.mordansoft.homebank.app.App
 import com.mordansoft.homebank.domain.model.Purchase
 import com.mordansoft.homebank.ui.StubActivity
+import com.mordansoft.homebank.ui.profits.ProfitsActivity
 import com.mordansoft.homebank.ui.purchase.PurchaseActivity
 
 
@@ -368,12 +369,13 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra("EXTRA_PURCHASE_ID", "0")
         intent.putExtra("EXTRA_PARENT_ID", "main")
         startActivity(intent)
-    }
+    }*/
 
     fun gotoProfits(view: View?) {
         val intent = Intent(this, ProfitsActivity::class.java)
         startActivity(intent)
     }
+    /*
 
     fun previousPeriod(view: View?) {
         changePeriod(-1)

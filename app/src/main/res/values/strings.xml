@@ -38,4 +38,8 @@
     <string name="active">active</string>
     <string name="notActive">not Active</string>
     <string name="daughterPurchase">" daughter Purchase"</string>
+    <string name="nameOfProfit">Name</string>
+    <string name="date">Date</string>
+    <string name="received">Receive</string>
+    <string name="cancelled">cancelled</string>
 </resources>
