@@ -15,7 +15,7 @@ class MainViewModel(private val getMainPurchasesUc      : GetMainPurchasesUc) : 
     var purchases: LiveData<ArrayList<Purchase>> = _purchases
 
 
-    fun getPurchase(){
+    fun getPurchases(){
         viewModelScope.launch {
             _purchases.value = getMainPurchasesUc.execute()
         }

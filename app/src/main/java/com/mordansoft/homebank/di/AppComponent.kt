@@ -1,5 +1,6 @@
 package com.mordansoft.homebank.di
 import com.mordansoft.homebank.ui.main.MainActivity
+import com.mordansoft.homebank.ui.purchase.PurchaseActivity
 import dagger.Component
 import javax.inject.Inject
 
@@ -7,4 +8,5 @@ import javax.inject.Inject
 interface AppComponent  {
 
     fun inject(mainActivity: MainActivity)
+    fun inject(purchaseActivity: PurchaseActivity)
 }

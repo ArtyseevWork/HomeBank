@@ -21,6 +21,7 @@ import com.mordansoft.homebank.R
 import com.mordansoft.homebank.app.App
 import com.mordansoft.homebank.domain.model.Purchase
 import com.mordansoft.homebank.ui.StubActivity
+import com.mordansoft.homebank.ui.purchase.PurchaseActivity
 
 
 class MainActivity : AppCompatActivity() {
@@ -47,7 +48,7 @@ class MainActivity : AppCompatActivity() {
 
         vm = ViewModelProvider(this, vmFactory)[MainViewModel::class.java]
 
-        vm.getPurchase();
+        vm.getPurchases();
         //vm.getMainPurchasesMutableLiveData().observe(this,mainPurchasesObserver)
         vm.purchases.observe(this,mainPurchasesObserver)
         //createRecyclerView(R.id.mainPurchasesRecyclerView)
@@ -159,14 +160,11 @@ class MainActivity : AppCompatActivity() {
         adapter.setListener(
             object : PurchaseAdapter.Listener {
                 override fun onClick(view: View, position: Long) {
-                    val intent = Intent(view.context, StubActivity::class.java)
+                    val intent = Intent(view.context, PurchaseActivity::class.java)
                     intent.putExtra("EXTRA_PURCHASE_ID", position)
                     startActivity(intent)
                 }
-
             }
-
-
         )
     }
 

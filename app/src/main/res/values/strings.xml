@@ -20,4 +20,22 @@
     <string name="closePeriod">closePeriod</string>
     <string name="clearPeriod">clearPeriod</string>
     <string name="exitFromProfile">exitFromProfile</string>
+    <string name="nameOfPurchase">Name</string>
+    <string name="price">price</string>
+    <string name="count">count</string>
+    <string name="amount">amount</string>
+    <string name="notNecessary">Not necessary</string>
+    <string name="description">description</string>
+    <string name="repeater">repeater</string>
+    <string name="delete">delete</string>
+    <string name="save">save</string>
+    <string name="cancelButton">Cancel</string>
+    <string name="noItIsNot">no</string>
+    <string name="yesItIs">yes</string>
+    <string name="ok" />
+    <string name="budgetIncreased">budget Increased</string>
+    <string name="budgetIncreasedMessage">budgetIncreasedMessage</string>
+    <string name="active">active</string>
+    <string name="notActive">not Active</string>
+    <string name="daughterPurchase">" daughter Purchase"</string>
 </resources>

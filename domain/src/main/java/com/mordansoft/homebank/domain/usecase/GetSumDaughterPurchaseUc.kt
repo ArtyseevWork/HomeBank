@@ -5,8 +5,7 @@ import com.mordansoft.homebank.domain.repo.PurchaseRepo
 
 class GetSumDaughterPurchaseUc(private val purchaseRepo: PurchaseRepo) {
 
-    suspend fun execute(purchase : Purchase): Float{
-        val parentId = purchase.parentId
+    suspend fun execute(parentId : Long): Float{
         val daughterPurchases = purchaseRepo.getDaughterPurchases(parentId)
         var purchasesSum: Float = 0f
         for (e in daughterPurchases){

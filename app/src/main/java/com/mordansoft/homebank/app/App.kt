@@ -20,5 +20,9 @@ class App: Application() {
             .build()
     }
 
+    fun getActualPeriod(): Int {
+        return 5
+    }
+
 
 }
