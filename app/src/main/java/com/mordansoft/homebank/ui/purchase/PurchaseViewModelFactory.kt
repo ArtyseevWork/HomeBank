@@ -3,7 +3,7 @@ package com.mordansoft.homebank.ui.purchase
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.mordansoft.homebank.domain.usecase.purchase.*
-import com.mordansoft.homebank.ui.profit.PurchaseViewModel
+
 
 class PurchaseViewModelFactory(private val getPurchaseByIdUc       : GetPurchaseByIdUc,
                                private val getDaughterPurchasesUc  : GetDaughterPurchasesUc,

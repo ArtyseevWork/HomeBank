@@ -17,6 +17,7 @@ import com.mordansoft.homebank.ui.main.MainActivity
 import com.mordansoft.homebank.ui.main.MainViewModel
 import com.mordansoft.homebank.ui.main.MainViewModelFactory
 import com.mordansoft.homebank.ui.main.PurchaseAdapter
+import com.mordansoft.homebank.ui.profit.ProfitActivity
 import com.mordansoft.homebank.ui.purchase.PurchaseActivity
 
 import java.lang.String
@@ -116,8 +117,8 @@ class ProfitsActivity : AppCompatActivity() {
         adapter.setListener(
             object : ProfitAdapter.Listener {
                 override fun onClick(view: View, position: Long) {
-                    val intent = Intent(view.context, PurchaseActivity::class.java)
-                    intent.putExtra("EXTRA_PURCHASE_ID", position)
+                    val intent = Intent(view.context, ProfitActivity::class.java)
+                    intent.putExtra("EXTRA_PROFIT_ID", position)
                     startActivity(intent)
                 }
             }

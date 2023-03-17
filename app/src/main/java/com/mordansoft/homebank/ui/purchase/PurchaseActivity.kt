@@ -22,7 +22,6 @@ import com.mordansoft.homebank.domain.model.Purchase
 import com.mordansoft.homebank.ui.StubActivity
 import com.mordansoft.homebank.ui.main.MainActivity
 import com.mordansoft.homebank.ui.main.PurchaseAdapter
-import com.mordansoft.homebank.ui.profit.PurchaseViewModel
 
 class PurchaseActivity : AppCompatActivity() {
     //private int periodId;
