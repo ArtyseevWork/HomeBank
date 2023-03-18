@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mordansoft.homebank.R
 import com.mordansoft.homebank.app.App
 import com.mordansoft.homebank.domain.model.Profit
+import com.mordansoft.homebank.domain.model.ProfitsAccounting
 import com.mordansoft.homebank.domain.model.Purchase
 import com.mordansoft.homebank.ui.main.MainActivity
 import com.mordansoft.homebank.ui.main.MainViewModel
@@ -28,11 +29,10 @@ import kotlin.Int
 class ProfitsActivity : AppCompatActivity() {
     private var periodId = 0
     var v_period: TextView? = null
-    var v_plan: TextView? = null
-    var v_fact: TextView? = null
     lateinit var myApp: App
     var onlineMode = false
     private var listProfits: ArrayList<Profit> = ArrayList()
+    private var profitsAccounting = ProfitsAccounting()
 
     private lateinit var vm : ProfitsViewModel
 
@@ -53,9 +53,12 @@ class ProfitsActivity : AppCompatActivity() {
 
         vm = ViewModelProvider(this, vmFactory)[ProfitsViewModel::class.java]
 
+
+        vm.getAccounting(-8) // todo period
         vm.getProfits();
         //vm.getMainPurchasesMutableLiveData().observe(this,mainPurchasesObserver)
         vm.profits.observe(this,mainProfitsObserver)
+        vm.accounting.observe(this,accountingObserver)
 
 
 
@@ -72,12 +75,10 @@ class ProfitsActivity : AppCompatActivity() {
 
     fun updateUi(){
         //createRecyclerView(R.id.profitsRecyclerView)
-        v_plan = findViewById<TextView>(R.id.activity_profits__plan_budget)
-        v_fact = findViewById<TextView>(R.id.activity_profits__fact_budget)
-        //v_plan.setText(String.valueOf(Profit.getPeriodProfits(this, periodId, 0, false)))
-        //var periodProfits: Float = Profit.getPeriodProfits(this, periodId, 200, false)
-        //periodProfits += Profit.getPeriodProfits(this, periodId, 300, false)
-       // v_fact.setText(periodProfits.toString())
+        var v_plan = findViewById<TextView>(R.id.activity_profits__plan_budget)
+        var v_fact = findViewById<TextView>(R.id.activity_profits__fact_budget)
+        v_plan.setText(String.valueOf(profitsAccounting.capitalPlan))
+        v_fact.setText(String.valueOf(profitsAccounting.capitalFact))
         v_period = findViewById<TextView>(R.id.profitsPeriod)
         //v_period.setText(myApp.getCurrentPeriodName())
        // buttonsPeriodAvailable()
@@ -87,6 +88,12 @@ class ProfitsActivity : AppCompatActivity() {
         Observer<ArrayList<Profit>> { newMainProfits -> // Update the UI, in this case, a TextView.
             listProfits = newMainProfits
             createRecyclerView()
+            updateUi()
+        }
+
+    private val accountingObserver: Observer<ProfitsAccounting> =
+        Observer<ProfitsAccounting> { newAccounting -> // Update the UI, in this case, a TextView.
+            profitsAccounting = newAccounting
             updateUi()
         }
 

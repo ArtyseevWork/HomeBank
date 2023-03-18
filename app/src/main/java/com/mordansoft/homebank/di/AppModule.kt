@@ -2,10 +2,7 @@ package com.mordansoft.homebank.di
 
 import android.content.Context
 import com.mordansoft.homebank.domain.usecase.period.GetPeriodAccountingUc
-import com.mordansoft.homebank.domain.usecase.profit.DeleteProfitUc
-import com.mordansoft.homebank.domain.usecase.profit.GetMainProfitsUc
-import com.mordansoft.homebank.domain.usecase.profit.GetProfitByIdUc
-import com.mordansoft.homebank.domain.usecase.profit.SetProfitUc
+import com.mordansoft.homebank.domain.usecase.profit.*
 import com.mordansoft.homebank.domain.usecase.purchase.*
 import com.mordansoft.homebank.ui.main.MainViewModelFactory
 import com.mordansoft.homebank.ui.profit.ProfitViewModelFactory
@@ -21,32 +18,33 @@ class AppModule(val context: Context) {
         return context
     }
     @Provides
-    fun provideMainViewModelFactory(getMainPurchasesUc: GetMainPurchasesUc,
-                                    getPeriodAccountingUc: GetPeriodAccountingUc
+    fun provideMainViewModelFactory(getMainPurchasesUc    : GetMainPurchasesUc,
+                                    getPeriodAccountingUc : GetPeriodAccountingUc
                                     ) : MainViewModelFactory{
         return MainViewModelFactory(getMainPurchasesUc, getPeriodAccountingUc)
     }
 
     @Provides
-    fun provideProfitsViewModelFactory(getMainProfitsUc: GetMainProfitsUc)
+    fun provideProfitsViewModelFactory(getMainProfitsUc       : GetMainProfitsUc,
+                                       getProfitsAccountingUc : GetProfitsAccountingUc)
     : ProfitsViewModelFactory {
-        return ProfitsViewModelFactory(getMainProfitsUc)
+        return ProfitsViewModelFactory(getMainProfitsUc, getProfitsAccountingUc)
     }
 
     @Provides
-    fun provideProfitViewModelFactory(getProfitByIdUc       : GetProfitByIdUc,
-                                      setProfitUc           : SetProfitUc,
-                                      deleteProfitUc        : DeleteProfitUc
+    fun provideProfitViewModelFactory(getProfitByIdUc : GetProfitByIdUc,
+                                      setProfitUc     : SetProfitUc,
+                                      deleteProfitUc  : DeleteProfitUc
     ) : ProfitViewModelFactory {
         return ProfitViewModelFactory(getProfitByIdUc, setProfitUc, deleteProfitUc)
     }
 
     @Provides
-    fun providePurchaseViewModelFactory(getPurchaseByIdUc       : GetPurchaseByIdUc,
-                                        getDaughterPurchasesUc  : GetDaughterPurchasesUc,
-                                        getSumDaughterPurchaseUc: GetSumDaughterPurchaseUc,
-                                        setPurchaseUc           : SetPurchaseUc,
-                                        deletePurchaseUc        : DeletePurchaseUc
+    fun providePurchaseViewModelFactory(getPurchaseByIdUc        : GetPurchaseByIdUc,
+                                        getDaughterPurchasesUc   : GetDaughterPurchasesUc,
+                                        getSumDaughterPurchaseUc : GetSumDaughterPurchaseUc,
+                                        setPurchaseUc            : SetPurchaseUc,
+                                        deletePurchaseUc         : DeletePurchaseUc
                                         ) : PurchaseViewModelFactory{
         return PurchaseViewModelFactory(getPurchaseByIdUc,
                                         getDaughterPurchasesUc,

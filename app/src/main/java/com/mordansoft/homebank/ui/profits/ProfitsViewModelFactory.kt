@@ -4,14 +4,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
 import com.mordansoft.homebank.domain.usecase.profit.GetMainProfitsUc
+import com.mordansoft.homebank.domain.usecase.profit.GetProfitsAccountingUc
 
 
-
-class ProfitsViewModelFactory(val getMainProfitsUc: GetMainProfitsUc):  ViewModelProvider.Factory {
+class ProfitsViewModelFactory(val getMainProfitsUc       : GetMainProfitsUc,
+                              val getProfitsAccountingUc : GetProfitsAccountingUc)
+    :  ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return ProfitsViewModel(
-            getMainProfitsUc = getMainProfitsUc
+            getMainProfitsUc       = getMainProfitsUc,
+            getProfitsAccountingUc = getProfitsAccountingUc
         ) as T
     }
 }
