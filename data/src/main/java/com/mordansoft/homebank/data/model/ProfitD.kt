@@ -12,7 +12,7 @@ data class ProfitD(
     var name       : String = "NewProfit",
     var description: String = "Your Description",
     var amount     : Float= 1000f,
-    var periodId   : Int = -8,
+    var periodId   : Int = 1,
     var statusId   : Int = 300,
     var date       : Long = 0L,
     var timestamp  : Long = 0L,

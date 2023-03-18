@@ -1,9 +1,11 @@
 package com.mordansoft.homebank.di
 
+import com.mordansoft.homebank.domain.repo.PeriodRepo
 import com.mordansoft.homebank.domain.repo.PreferencesRepo
 import com.mordansoft.homebank.domain.repo.ProfitRepo
 import com.mordansoft.homebank.domain.repo.PurchaseRepo
 import com.mordansoft.homebank.domain.usecase.period.GetPeriodAccountingUc
+import com.mordansoft.homebank.domain.usecase.period.GetPeriodUc
 import com.mordansoft.homebank.domain.usecase.profit.*
 import com.mordansoft.homebank.domain.usecase.purchase.*
 import dagger.Module
@@ -71,4 +73,13 @@ class DomainModule {
     fun provideGetProfitsAccountingUc(profitRepo : ProfitRepo) : GetProfitsAccountingUc {
         return GetProfitsAccountingUc(profitRepo = profitRepo)
     }
+
+    @Provides
+    fun provideGetPeriodUc(periodRepo   : PeriodRepo,
+                           preferencesRepo: PreferencesRepo) : GetPeriodUc {
+        return GetPeriodUc(periodRepo      = periodRepo,
+                           preferencesRepo = preferencesRepo)
+    }
+
+
 }

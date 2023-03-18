@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.navigation.NavigationView
 import com.mordansoft.homebank.R
 import com.mordansoft.homebank.app.App
+import com.mordansoft.homebank.domain.model.Period
 import com.mordansoft.homebank.domain.model.PeriodAccounting
 import com.mordansoft.homebank.domain.model.Purchase
 import com.mordansoft.homebank.ui.StubActivity
@@ -35,6 +36,7 @@ class MainActivity : AppCompatActivity() {
     private var filterStatus = 0
     private lateinit var adapter: PurchaseAdapter
     private lateinit var vm : MainViewModel
+    private var period : Period  = Period()
 
     @javax.inject.Inject
     lateinit var vmFactory: MainViewModelFactory
@@ -52,9 +54,9 @@ class MainActivity : AppCompatActivity() {
 
         vm = ViewModelProvider(this, vmFactory)[MainViewModel::class.java]
 
-        vm.getPurchases();
-        vm.getAccounting(-8)// todo periods
+        vm.getPeriodsData(null)
         vm.accounting.observe(this, mainAccountingObserver)
+        vm.period.observe(this, mainPeriodObserver)
         //vm.getMainPurchasesMutableLiveData().observe(this,mainPurchasesObserver)
         vm.purchases.observe(this,mainPurchasesObserver)
         //createRecyclerView(R.id.mainPurchasesRecyclerView)
@@ -80,15 +82,7 @@ class MainActivity : AppCompatActivity() {
         val balancePlan = periodBudgetPlan - spentPlan
         val balanceFact = periodBudgetFact - spentFact
 
-        val tvPeriodNow = findViewById<TextView>(R.id.mainPeriod)
-        tvPeriodNow.setText(mMyApp.getCurrentPeriodName())
-        val tvActiveStatus = findViewById<TextView>(R.id.mainActiveStatus)
-        if (periodId == mMyApp.getActualPeriod()) {
-            tvActiveStatus.text = getString(R.string.active)
-        } else {
-            tvActiveStatus.text = getString(R.string.notActive)
-        }
-        buttonsPeriodAvailable()
+
         val query = "parent_id = " + "\"" + "main" + "\"" + " order by timestamp desc"*/
 
 
@@ -133,7 +127,24 @@ class MainActivity : AppCompatActivity() {
         v_fact_spent.text = String.format("%.0f",   periodAccounting.expencesFact)
         v_plan_balance.text = String.format("%.0f", periodAccounting.balancePlan)
         v_fact_balance.text = String.format("%.0f", periodAccounting.balanceFact)
+
+        val tvPeriodNow = findViewById<TextView>(R.id.mainPeriod)
+        tvPeriodNow.setText(period.name)
+        val tvActiveStatus = findViewById<TextView>(R.id.mainActiveStatus)
+        /*if (periodId == mMyApp.getActualPeriod()) { //todo status Name
+            tvActiveStatus.text = getString(R.string.active)
+        } else {
+            tvActiveStatus.text = getString(R.string.notActive)
+        }*/
+        buttonsPeriodAvailable()
     }
+
+    private val mainPeriodObserver: Observer<Period> =
+        Observer<Period> { newPeriod -> // Update the UI, in this case, a TextView.
+            period = newPeriod
+            updateUi()
+        }
+
 
     private val mainPurchasesObserver: Observer<ArrayList<Purchase>> =
         Observer<ArrayList<Purchase>> { newMainPurchases -> // Update the UI, in this case, a TextView.
@@ -363,21 +374,21 @@ class MainActivity : AppCompatActivity() {
         }*/
     }
 
-    /*fun buttonsPeriodAvailable() {
+    fun buttonsPeriodAvailable() {
         val previousPeriod = findViewById<View>(R.id.buttonPreviousPeriod)
-        if (Period.neighborIsAvailable(this, periodId, -1)) {
+        if (period.previousPeriodId != 0) {
             previousPeriod.background = ContextCompat.getDrawable(this, R.drawable.ic_arrow_left)
         } else {
             previousPeriod.background =
                 ContextCompat.getDrawable(this, R.drawable.ic_arrow_left_off)
         }
         val nextPeriod = findViewById<View>(R.id.buttonNextPeriod)
-        if (Period.neighborIsAvailable(this, periodId, +1)) {
+        if (period.nextPeriodId != 0) {
             nextPeriod.background = ContextCompat.getDrawable(this, R.drawable.ic_arrow_right)
         } else {
             nextPeriod.background = ContextCompat.getDrawable(this, R.drawable.ic_arrow_right_off)
         }
-    }*/
+    }
 
     /******* Buttons  */
     /*fun addPurchase(view: View?) {

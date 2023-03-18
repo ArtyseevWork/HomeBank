@@ -1,8 +1,8 @@
 package com.mordansoft.homebank.data.storage
 
-import com.mordansoft.homebank.domain.model.Preferences
+import com.mordansoft.homebank.data.model.PreferencesD
 
 interface PreferencesStorage {
-    suspend fun updatePreferences(preferences: Preferences)
-    suspend fun getPreferences(): Preferences
+    suspend fun updatePreferences(preferences: PreferencesD)
+    suspend fun getPreferences(): PreferencesD
 }

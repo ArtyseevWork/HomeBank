@@ -6,8 +6,8 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "period")
 data class PeriodD(
     @PrimaryKey(autoGenerate = false)
-    val id: Int = 0,
-    val name: String = "January 2023",
-    val dateFrom: Long = 0,
-    val dateTo: Long = 100000,
-    val statusId: Int = 0)
+    val id       : Int = 0,
+    val name     : String = "Period",
+    val dateFrom : Long = 0,
+    val dateTo   : Long = 100000,
+    val statusId : Int = 0)

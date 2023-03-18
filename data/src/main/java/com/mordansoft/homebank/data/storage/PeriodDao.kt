@@ -11,7 +11,7 @@ interface PeriodDao {
     suspend fun getPeriodsByStatus(statusId: Int): Array<PeriodD>
 
     @Query("SELECT * FROM period WHERE id = :periodId")
-    suspend fun getPeriodById(periodId: Long): PeriodD
+    suspend fun getPeriodById(periodId: Int): PeriodD
 
 
     @Insert

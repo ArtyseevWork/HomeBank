@@ -13,7 +13,7 @@ data class PurchaseD(
     val description: String = "Your description",
     val price: Float = 100f,
     val count: Float = 1f,
-    val periodId: Int = -8,
+    val periodId: Int = 1,
     val statusId: Int  = -8,
     val parentId: Long = -8,
     val repeater: Boolean  = false,
