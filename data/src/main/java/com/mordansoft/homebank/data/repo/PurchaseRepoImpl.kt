@@ -38,7 +38,7 @@ class PurchaseRepoImpl (private val purchaseDao: PurchaseDao,
     }
 
     override suspend fun insertTestPurchase(){
-        for ( i in 1..10){
+        for ( i in 1..8){
             try{
                 purchaseDao.insertAll(PurchaseD(id = i.toLong()))
             } catch (e: Exception){

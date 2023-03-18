@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.navigation.NavigationView
 import com.mordansoft.homebank.R
 import com.mordansoft.homebank.app.App
+import com.mordansoft.homebank.domain.model.PeriodAccounting
 import com.mordansoft.homebank.domain.model.Purchase
 import com.mordansoft.homebank.ui.StubActivity
 import com.mordansoft.homebank.ui.profits.ProfitsActivity
@@ -36,6 +38,7 @@ class MainActivity : AppCompatActivity() {
 
     @javax.inject.Inject
     lateinit var vmFactory: MainViewModelFactory
+    private  var periodAccounting = PeriodAccounting()
     //var purchaseEventListener: ChildEventListener? = null
     //var purchasesQuery: Query? = null
     //var profitsEventListener: ChildEventListener? = null
@@ -50,6 +53,8 @@ class MainActivity : AppCompatActivity() {
         vm = ViewModelProvider(this, vmFactory)[MainViewModel::class.java]
 
         vm.getPurchases();
+        vm.getAccounting(-8)// todo periods
+        vm.accounting.observe(this, mainAccountingObserver)
         //vm.getMainPurchasesMutableLiveData().observe(this,mainPurchasesObserver)
         vm.purchases.observe(this,mainPurchasesObserver)
         //createRecyclerView(R.id.mainPurchasesRecyclerView)
@@ -74,18 +79,7 @@ class MainActivity : AppCompatActivity() {
         val spentFact: Float = Purchase.getPeriodSpending(this, periodId, true)
         val balancePlan = periodBudgetPlan - spentPlan
         val balanceFact = periodBudgetFact - spentFact
-        val v_plan_budget = findViewById<TextView>(R.id.activity_main__plan_budget)
-        val v_fact_budget = findViewById<TextView>(R.id.activity_main__fact_budget)
-        val v_plan_spent = findViewById<TextView>(R.id.activity_main__plan_spent)
-        val v_fact_spent = findViewById<TextView>(R.id.activity_main__fact_spent)
-        val v_plan_balance = findViewById<TextView>(R.id.activity_main__plan_balance)
-        val v_fact_balance = findViewById<TextView>(R.id.activity_main__fact_balance)
-        v_plan_budget.text = String.format("%.0f", periodBudgetPlan)
-        v_fact_budget.text = String.format("%.0f", periodBudgetFact)
-        v_plan_spent.text = String.format("%.0f", spentPlan)
-        v_fact_spent.text = String.format("%.0f", spentFact)
-        v_plan_balance.text = String.format("%.0f", balancePlan)
-        v_fact_balance.text = String.format("%.0f", balanceFact)
+
         val tvPeriodNow = findViewById<TextView>(R.id.mainPeriod)
         tvPeriodNow.setText(mMyApp.getCurrentPeriodName())
         val tvActiveStatus = findViewById<TextView>(R.id.mainActiveStatus)
@@ -126,10 +120,32 @@ class MainActivity : AppCompatActivity() {
         //setStatus(mMyApp.getStatusInMainActivity())
     } // ! end onCreate
 
+    private fun updateUi(){
+        val v_plan_budget = findViewById<TextView>(R.id.activity_main__plan_budget)
+        val v_fact_budget = findViewById<TextView>(R.id.activity_main__fact_budget)
+        val v_plan_spent = findViewById<TextView>(R.id.activity_main__plan_spent)
+        val v_fact_spent = findViewById<TextView>(R.id.activity_main__fact_spent)
+        val v_plan_balance = findViewById<TextView>(R.id.activity_main__plan_balance)
+        val v_fact_balance = findViewById<TextView>(R.id.activity_main__fact_balance)
+        v_plan_budget.text = String.format("%.0f",  periodAccounting.balancePlan)
+        v_fact_budget.text = String.format("%.0f",  periodAccounting.balanceFact)
+        v_plan_spent.text = String.format("%.0f",   periodAccounting.expencesPlan)
+        v_fact_spent.text = String.format("%.0f",   periodAccounting.expencesFact)
+        v_plan_balance.text = String.format("%.0f", periodAccounting.balancePlan)
+        v_fact_balance.text = String.format("%.0f", periodAccounting.balanceFact)
+    }
+
     private val mainPurchasesObserver: Observer<ArrayList<Purchase>> =
         Observer<ArrayList<Purchase>> { newMainPurchases -> // Update the UI, in this case, a TextView.
             listPurchases = newMainPurchases
             createRecyclerView()
+        }
+
+
+    private val mainAccountingObserver: Observer<PeriodAccounting> =
+        Observer<PeriodAccounting> { newAccounting -> // Update the UI, in this case, a TextView.
+            periodAccounting = newAccounting
+            updateUi()
         }
 
 

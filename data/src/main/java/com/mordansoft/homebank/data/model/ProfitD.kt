@@ -11,9 +11,9 @@ data class ProfitD(
     var idFdb      : Long = -8L,
     var name       : String = "NewProfit",
     var description: String = "Your Description",
-    var amount     : Float= 0f,
+    var amount     : Float= 1000f,
     var periodId   : Int = -8,
-    var statusId   : Int = -8,
+    var statusId   : Int = 300,
     var date       : Long = 0L,
     var timestamp  : Long = 0L,
     var repeater   : Boolean = false

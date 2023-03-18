@@ -1,6 +1,7 @@
 package com.mordansoft.homebank.di
 
 import android.content.Context
+import com.mordansoft.homebank.domain.usecase.period.GetPeriodAccountingUc
 import com.mordansoft.homebank.domain.usecase.profit.DeleteProfitUc
 import com.mordansoft.homebank.domain.usecase.profit.GetMainProfitsUc
 import com.mordansoft.homebank.domain.usecase.profit.GetProfitByIdUc
@@ -20,8 +21,10 @@ class AppModule(val context: Context) {
         return context
     }
     @Provides
-    fun provideMainViewModelFactory(getMainPurchasesUc: GetMainPurchasesUc) : MainViewModelFactory{
-        return MainViewModelFactory(getMainPurchasesUc)
+    fun provideMainViewModelFactory(getMainPurchasesUc: GetMainPurchasesUc,
+                                    getPeriodAccountingUc: GetPeriodAccountingUc
+                                    ) : MainViewModelFactory{
+        return MainViewModelFactory(getMainPurchasesUc, getPeriodAccountingUc)
     }
 
     @Provides

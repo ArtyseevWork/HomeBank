@@ -3,6 +3,7 @@ package com.mordansoft.homebank.data.repo
 
 import androidx.annotation.WorkerThread
 import com.mordansoft.homebank.data.model.PurchaseD
+import com.mordansoft.homebank.data.storage.PreferencesStorageImplSnPr
 import com.mordansoft.homebank.data.storage.PurchaseDao
 import com.mordansoft.homebank.domain.model.Preferences
 import com.mordansoft.homebank.domain.model.Purchase
@@ -10,16 +11,16 @@ import com.mordansoft.homebank.domain.repo.PreferencesRepo
 import com.mordansoft.homebank.domain.repo.PurchaseRepo
 import kotlinx.coroutines.*
 
-class PreferencesRepoImpl (private val purchaseDao: PurchaseDao,
+class PreferencesRepoImpl (private val preferencesStorageImplSnPr: PreferencesStorageImplSnPr,
                            private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default) :
     PreferencesRepo {
 
     override suspend fun updatePreferences(preferences: Preferences) {
-        TODO("Not yet implemented")
+        preferencesStorageImplSnPr.updatePreferences(preferences)
     }
 
     override suspend fun getPreferences(): Preferences {
-        TODO("Not yet implemented")
+        return preferencesStorageImplSnPr.getPreferences()
     }
 
     /*********** mappers  ************/
