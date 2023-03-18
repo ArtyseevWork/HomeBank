@@ -15,7 +15,7 @@ class ProfitRepoImpl (private val profitDao: ProfitDao,
         return profitDao.updateProfit(profitToProfitD(profit))
     }
 
-    override suspend fun getMainProfits(periodId: Long): ArrayList<Profit> {
+    override suspend fun getMainProfits(periodId: Int): ArrayList<Profit> {
         var resultList: ArrayList<Profit>
         withContext(defaultDispatcher) {
             resultList = profitDToProfitArray(profitDao.getMainProfits(periodId = periodId))

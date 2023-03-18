@@ -15,7 +15,7 @@ class PurchaseRepoImpl (private val purchaseDao: PurchaseDao,
         return purchaseDao.updatePurchase(purchaseToPurchaseD(purchase))
     }
 
-    override suspend fun getMainPurchases(parentId: Long, periodId: Long): ArrayList<Purchase> {
+    override suspend fun getMainPurchases(parentId: Long, periodId: Int): ArrayList<Purchase> {
         var resultList: ArrayList<Purchase>
         withContext(defaultDispatcher) {
             resultList = purchaseDToPurchaseArray(purchaseDao.getMainPurchases(parentId = parentId,

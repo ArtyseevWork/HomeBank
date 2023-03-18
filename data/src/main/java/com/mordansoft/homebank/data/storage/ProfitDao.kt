@@ -15,7 +15,7 @@ interface ProfitDao {
     suspend fun getAllActiveProfits(): Array<ProfitD>
 
     @Query("SELECT * FROM profit where periodId = :periodId")
-    suspend fun getMainProfits(periodId : Long): Array<ProfitD>
+    suspend fun getMainProfits(periodId : Int): Array<ProfitD>
 
 
     @Query("SELECT * FROM profit WHERE id = :profitId")
