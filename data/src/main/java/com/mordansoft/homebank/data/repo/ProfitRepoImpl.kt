@@ -29,7 +29,7 @@ class ProfitRepoImpl (private val profitDao: ProfitDao,
 
 
     override suspend fun insertTestProfit(){
-        for ( i in 1..100){
+        for ( i in 1..10){
             try{
                 profitDao.insertAll(ProfitD(id = i.toLong()))
             } catch (e: Exception){
@@ -66,15 +66,6 @@ class ProfitRepoImpl (private val profitDao: ProfitDao,
             date        = profitD.date       ,
             timestamp   = profitD.timestamp  ,
             repeater    = profitD.repeater
-
-
-
-
-
-
-
-
-
 
         )
     }

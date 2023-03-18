@@ -26,7 +26,7 @@ class PeriodRepoImpl (private val periodDao: PeriodDao,
 
 
     override suspend fun insertTestPeriod(){
-        for ( i in 1..100){
+        for ( i in 1..10){
             try{
                 periodDao.insertAll(PeriodD(id = i))
             } catch (e: Exception){
