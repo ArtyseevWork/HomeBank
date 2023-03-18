@@ -7,12 +7,15 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.mordansoft.homebank.data.model.ProfitD
 import com.mordansoft.homebank.data.model.PurchaseD
+import com.mordansoft.homebank.data.model.PeriodD
 
-@Database(entities = [PurchaseD::class, ProfitD::class ], version = 1, exportSchema = false)
+@Database(entities = [PurchaseD::class, ProfitD::class, PeriodD::class ], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun purchaseDao(): PurchaseDao
     abstract fun profitDao(): ProfitDao
+    abstract fun periodDao(): PeriodDao
+
 
     companion object {
         @Volatile
