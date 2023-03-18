@@ -1,6 +1,7 @@
 package com.mordansoft.homebank.domain.usecase.period
 
 import com.mordansoft.homebank.domain.model.PeriodAccounting
+import com.mordansoft.homebank.domain.model.Status
 import com.mordansoft.homebank.domain.repo.PreferencesRepo
 import com.mordansoft.homebank.domain.repo.ProfitRepo
 import com.mordansoft.homebank.domain.repo.PurchaseRepo
@@ -24,9 +25,9 @@ class GetPeriodAccountingUc(private val profitRepo: ProfitRepo,
         var periodProfits = profitRepo.getMainProfits(periodId = periodOfProfits)
 
         for (profit in  periodProfits){ //todo refactor to when
-            if (profit.statusId < 400 ) {
+            if (profit.statusId < Status.REMOVED ) {
                 capitalPlan += profit.amount
-                if (profit.statusId == 300) {
+                if (profit.statusId == Status.PURCHASED) {
                     capitalFact += profit.amount
                 }
             }
@@ -34,10 +35,10 @@ class GetPeriodAccountingUc(private val profitRepo: ProfitRepo,
 
         var periodPurchases = purchaseRepo.getMainPurchases(periodId = periodId, parentId = -8) // todo period-1
         for (purchase in  periodPurchases){
-            if (purchase.statusId < 400){
+            if (purchase.statusId < Status.REMOVED){
                 val purchaseAmount : Float  = purchase.count * purchase.price
                 expencesPlan += purchaseAmount
-                if (purchase.statusId == 300) {
+                if (purchase.statusId == Status.PURCHASED) {
                     expencesFact += purchaseAmount
                 }
             }

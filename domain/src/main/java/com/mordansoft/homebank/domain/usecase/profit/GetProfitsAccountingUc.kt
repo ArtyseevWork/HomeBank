@@ -1,6 +1,7 @@
 package com.mordansoft.homebank.domain.usecase.profit
 
 import com.mordansoft.homebank.domain.model.ProfitsAccounting
+import com.mordansoft.homebank.domain.model.Status
 import com.mordansoft.homebank.domain.repo.ProfitRepo
 
 class GetProfitsAccountingUc( private val profitRepo: ProfitRepo) {
@@ -14,9 +15,9 @@ class GetProfitsAccountingUc( private val profitRepo: ProfitRepo) {
         var periodProfits = profitRepo.getMainProfits(periodId = periodId)
 
         for (profit in  periodProfits){ //todo refactor to when
-            if (profit.statusId < 400 ) {
+            if (profit.statusId < Status.REMOVED ) {
                 capitalPlan += profit.amount
-                if (profit.statusId == 300) {
+                if (profit.statusId == Status.RECEIVED) {
                     capitalFact += profit.amount
                 }
             }
