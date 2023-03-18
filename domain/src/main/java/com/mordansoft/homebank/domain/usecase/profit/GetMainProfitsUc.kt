@@ -9,7 +9,7 @@ class GetMainProfitsUc(private val profitRepo: ProfitRepo) {
     suspend fun execute(): ArrayList<Profit> {
         profitRepo.insertTestProfit()
         val parentId : Long = -8
-        val periodId : Long = -8
+        val periodId : Int = -8
         return profitRepo.getMainProfits(periodId = periodId)
     }
 
