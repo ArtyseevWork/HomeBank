@@ -5,12 +5,14 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mordansoft.homebank.R
 import com.mordansoft.homebank.app.App
+import com.mordansoft.homebank.domain.model.Period
 import com.mordansoft.homebank.domain.model.Profit
 import com.mordansoft.homebank.domain.model.ProfitsAccounting
 import com.mordansoft.homebank.domain.model.Purchase
@@ -28,89 +30,69 @@ import kotlin.Int
 
 class ProfitsActivity : AppCompatActivity() {
     private var periodId = 0
-    var v_period: TextView? = null
+
     lateinit var myApp: App
-    var onlineMode = false
     private var listProfits: ArrayList<Profit> = ArrayList()
     private var profitsAccounting = ProfitsAccounting()
-
+    private var period : Period = Period()
     private lateinit var vm : ProfitsViewModel
-
     @javax.inject.Inject
     lateinit var vmFactory: ProfitsViewModelFactory
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        myApp = this.applicationContext as App
         setContentView(R.layout.activity_profits)
-
+        myApp = this.applicationContext as App
         myApp.appComponent.inject(this)
-        //periodId = myApp.getCurrentPeriod()
-        //onlineMode = myApp.getOnlineMode()
-        periodId = 8
-        onlineMode = false
 
         vm = ViewModelProvider(this, vmFactory)[ProfitsViewModel::class.java]
+        vm.getPeriodsData(null)
 
-
-        vm.getAccounting(-8) // todo period
-        vm.getProfits();
-        //vm.getMainPurchasesMutableLiveData().observe(this,mainPurchasesObserver)
+        vm.period.observe(this, mainPeriodObserver)
         vm.profits.observe(this,mainProfitsObserver)
         vm.accounting.observe(this,accountingObserver)
 
 
 
-        v_period = findViewById<TextView>(R.id.profitsPeriod)
-
-        val tvActiveStatus = findViewById<TextView>(R.id.profitsActiveStatus)
+        /*val tvActiveStatus = findViewById<TextView>(R.id.profitsActiveStatus) //todo
         if (periodId == myApp.getActualPeriod()) {
             tvActiveStatus.text = getString(R.string.active)
         } else {
             tvActiveStatus.text = getString(R.string.notActive)
-        }
+        }*/
 
     }
 
     fun updateUi(){
         //createRecyclerView(R.id.profitsRecyclerView)
-        var v_plan = findViewById<TextView>(R.id.activity_profits__plan_budget)
-        var v_fact = findViewById<TextView>(R.id.activity_profits__fact_budget)
+        val v_plan = findViewById<TextView>(R.id.activity_profits__plan_budget)
+        val v_fact = findViewById<TextView>(R.id.activity_profits__fact_budget)
+        val v_period = findViewById<TextView>(R.id.profitsPeriod)
         v_plan.setText(String.valueOf(profitsAccounting.capitalPlan))
         v_fact.setText(String.valueOf(profitsAccounting.capitalFact))
-        v_period = findViewById<TextView>(R.id.profitsPeriod)
-        //v_period.setText(myApp.getCurrentPeriodName())
-       // buttonsPeriodAvailable()
+        v_period.text = period.name
+        buttonsPeriodAvailable()
     }
 
     private val mainProfitsObserver: Observer<ArrayList<Profit>> =
-        Observer<ArrayList<Profit>> { newMainProfits -> // Update the UI, in this case, a TextView.
+        Observer<ArrayList<Profit>> { newMainProfits ->
             listProfits = newMainProfits
             createRecyclerView()
-            updateUi()
         }
 
     private val accountingObserver: Observer<ProfitsAccounting> =
-        Observer<ProfitsAccounting> { newAccounting -> // Update the UI, in this case, a TextView.
+        Observer<ProfitsAccounting> { newAccounting ->
             profitsAccounting = newAccounting
             updateUi()
         }
 
 
-
-    /*protected fun createFdbListeners() {
-        if (onlineMode) {
-            profitsEventListener = ChildEventListeners.getProfitEventListener(this)
-            profitsQuery = FirebaseHelper.profitsSync(profitsEventListener)
+    private val mainPeriodObserver: Observer<Period> =
+        Observer<Period> { newPeriod ->
+            period = newPeriod
+            updateUi()
         }
-    }*/
-
-    /*protected fun removeFdbListeners() {
-        if (onlineMode) {
-            profitsQuery.removeEventListener(profitsEventListener)
-        }
-    }*/
 
     fun createRecyclerView() {
         val linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true)
@@ -132,43 +114,42 @@ class ProfitsActivity : AppCompatActivity() {
         )
     }
 
-    /*fun previousPeriod(view: View?) {
-        changePeriod(-1)
-    }*/
 
-    /*fun nextPeriod(view: View?) {
-        changePeriod(+1)
-    }*/
+    fun previousPeriod(view: View?) {
+        changePeriod(period.previousPeriodId)
+    }
 
-    /*private fun changePeriod(position: Int) {
-        if (Period.neighborIsAvailable(this, periodId, position)) {
-            val intent = Intent(this, ProfitsActivity::class.java)
-            mMyApp.setCurrentPeriod(periodId + position)
-            startActivity(intent)
+    fun nextPeriod(view: View?) {
+        changePeriod(period.nextPeriodId)
+    }
+
+    private fun changePeriod(newPeriodId: Int) {
+        if (newPeriodId != 0) {
+            vm.getPeriodsData(newPeriodId)
         }
-    }*/
+    }
 
-    /*fun buttonsPeriodAvailable() {
+    private fun buttonsPeriodAvailable() {
         val previousPeriod = findViewById<View>(R.id.buttonPreviousPeriod)
-        if (Period.neighborIsAvailable(this, periodId, -1)) {
+        if (period.previousPeriodId != 0) {
             previousPeriod.background = ContextCompat.getDrawable(this, R.drawable.ic_arrow_left)
         } else {
             previousPeriod.background =
                 ContextCompat.getDrawable(this, R.drawable.ic_arrow_left_off)
         }
         val nextPeriod = findViewById<View>(R.id.buttonNextPeriod)
-        if (Period.neighborIsAvailable(this, periodId, +1)) {
+        if (period.nextPeriodId != 0) {
             nextPeriod.background = ContextCompat.getDrawable(this, R.drawable.ic_arrow_right)
         } else {
             nextPeriod.background = ContextCompat.getDrawable(this, R.drawable.ic_arrow_right_off)
         }
-    }*/
+    }
 
-    /*fun addProfit(view: View?) {
+    fun addProfit(view: View?) {
         val intent = Intent(this, ProfitActivity::class.java)
         intent.putExtra("EXTRA_PROFIT_ID", "0")
         startActivity(intent)
-    }*/
+    }
 
     fun buttonBack(view: View?) {
         goBack()

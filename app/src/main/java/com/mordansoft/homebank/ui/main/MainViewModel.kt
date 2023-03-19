@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(private val getMainPurchasesUc      : GetMainPurchasesUc,
                     private val getPeriodAccountingUc   : GetPeriodAccountingUc,
-                    private val getPeriodUc : GetPeriodUc
+                    private val getPeriodUc             : GetPeriodUc
 ) : ViewModel() {
 
     private val _period = MutableLiveData<Period>()

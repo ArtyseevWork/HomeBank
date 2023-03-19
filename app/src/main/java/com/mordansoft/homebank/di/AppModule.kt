@@ -28,9 +28,11 @@ class AppModule(val context: Context) {
 
     @Provides
     fun provideProfitsViewModelFactory(getMainProfitsUc       : GetMainProfitsUc,
-                                       getProfitsAccountingUc : GetProfitsAccountingUc)
+                                       getProfitsAccountingUc : GetProfitsAccountingUc,
+                                       getPeriodUc            : GetPeriodUc
+    )
     : ProfitsViewModelFactory {
-        return ProfitsViewModelFactory(getMainProfitsUc, getProfitsAccountingUc)
+        return ProfitsViewModelFactory(getMainProfitsUc, getProfitsAccountingUc, getPeriodUc)
     }
 
     @Provides
