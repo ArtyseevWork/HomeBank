@@ -38,9 +38,10 @@ class AppModule(val context: Context) {
     @Provides
     fun provideProfitViewModelFactory(getProfitByIdUc : GetProfitByIdUc,
                                       setProfitUc     : SetProfitUc,
-                                      deleteProfitUc  : DeleteProfitUc
+                                      deleteProfitUc  : DeleteProfitUc,
+                                      getPeriodUc     : GetPeriodUc
     ) : ProfitViewModelFactory {
-        return ProfitViewModelFactory(getProfitByIdUc, setProfitUc, deleteProfitUc)
+        return ProfitViewModelFactory(getProfitByIdUc, setProfitUc, deleteProfitUc, getPeriodUc)
     }
 
     @Provides

@@ -147,7 +147,8 @@ class ProfitsActivity : AppCompatActivity() {
 
     fun addProfit(view: View?) {
         val intent = Intent(this, ProfitActivity::class.java)
-        intent.putExtra("EXTRA_PROFIT_ID", "0")
+        intent.putExtra("EXTRA_PROFIT_ID", 0) // 0 - new profit
+        intent.putExtra("EXTRA_PERIOD_ID", period.id)
         startActivity(intent)
     }
 
