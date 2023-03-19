@@ -6,6 +6,10 @@ import com.mordansoft.homebank.domain.repo.ProfitRepo
 class GetProfitByIdUc(private val profitRepo: ProfitRepo) {
 
     suspend fun execute(profitId: Long): Profit{
-        return profitRepo.getProfitById(profitId = profitId)
+        var profit : Profit = Profit()
+        if (profitId > 0L){                                     // not new Profit
+            profitRepo.getProfitById(profitId = profitId)
+        }
+        return profit
     }
 }
