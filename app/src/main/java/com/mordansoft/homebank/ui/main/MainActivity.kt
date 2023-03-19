@@ -29,23 +29,18 @@ import com.mordansoft.homebank.ui.purchase.PurchaseActivity
 
 
 class MainActivity : AppCompatActivity() {
-    private var periodId = 0
-    protected lateinit var mMyApp: Application
+
     private var listPurchases: ArrayList<Purchase> = ArrayList()
     private lateinit var recyclerView: RecyclerView
-    private var filterStatus = 0
+    private var currentFilterStatus = 0
     private lateinit var adapter: PurchaseAdapter
     private lateinit var vm : MainViewModel
     private var period : Period  = Period()
+    private var back_pressed: Long = 0
 
     @javax.inject.Inject
     lateinit var vmFactory: MainViewModelFactory
     private  var periodAccounting = PeriodAccounting()
-    //var purchaseEventListener: ChildEventListener? = null
-    //var purchasesQuery: Query? = null
-    //var profitsEventListener: ChildEventListener? = null
-    //var profitsQuery: Query? = null
-    //var onlineMode = false
     override fun onCreate(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_main_new)
         super.onCreate(savedInstanceState)
@@ -57,37 +52,8 @@ class MainActivity : AppCompatActivity() {
         vm.getPeriodsData(null)
         vm.accounting.observe(this, mainAccountingObserver)
         vm.period.observe(this, mainPeriodObserver)
-        //vm.getMainPurchasesMutableLiveData().observe(this,mainPurchasesObserver)
         vm.purchases.observe(this,mainPurchasesObserver)
-        //createRecyclerView(R.id.mainPurchasesRecyclerView)
 
-
-
-        //periodId = mMyApp.getCurrentPeriod()
-        //onlineMode = mMyApp.getOnlineMode()
-        //val profitsMode: Int = mMyApp.getProfitsMode()
-        //var periodBudgetPlan = 0f
-        //var periodBudgetFact = 0f
-        /*if (profitsMode == 0) {
-            periodBudgetPlan = Profit.getPeriodProfits(this, periodId - profitsMode, 100, true)
-            periodBudgetFact = Profit.getPeriodProfits(this, periodId - profitsMode, 200, false)
-            periodBudgetFact += Profit.getPeriodProfits(this, periodId - profitsMode, 300, false)
-        } else if (profitsMode == 1) {
-            periodBudgetPlan = Profit.getPeriodProfits(this, periodId - profitsMode, 200, false)
-            periodBudgetPlan += Profit.getPeriodProfits(this, periodId - profitsMode, 300, false)
-            periodBudgetFact = periodBudgetPlan
-        }
-        val spentPlan: Float = Purchase.getPeriodSpending(this, periodId, false)
-        val spentFact: Float = Purchase.getPeriodSpending(this, periodId, true)
-        val balancePlan = periodBudgetPlan - spentPlan
-        val balanceFact = periodBudgetFact - spentFact
-
-
-        val query = "parent_id = " + "\"" + "main" + "\"" + " order by timestamp desc"*/
-
-
-
-        //listPurchases = Purchase.getPurchasesFromDatabase(this, query, periodId)
 
         /******** left menu  *********/
         val drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
@@ -121,6 +87,7 @@ class MainActivity : AppCompatActivity() {
         val v_fact_spent = findViewById<TextView>(R.id.activity_main__fact_spent)
         val v_plan_balance = findViewById<TextView>(R.id.activity_main__plan_balance)
         val v_fact_balance = findViewById<TextView>(R.id.activity_main__fact_balance)
+
         v_plan_budget.text = String.format("%.0f",  periodAccounting.balancePlan)
         v_fact_budget.text = String.format("%.0f",  periodAccounting.balanceFact)
         v_plan_spent.text = String.format("%.0f",   periodAccounting.expencesPlan)
@@ -129,9 +96,9 @@ class MainActivity : AppCompatActivity() {
         v_fact_balance.text = String.format("%.0f", periodAccounting.balanceFact)
 
         val tvPeriodNow = findViewById<TextView>(R.id.mainPeriod)
-        tvPeriodNow.setText(period.name)
+        tvPeriodNow.text = period.name
         val tvActiveStatus = findViewById<TextView>(R.id.mainActiveStatus)
-        /*if (periodId == mMyApp.getActualPeriod()) { //todo status Name
+        /*if (periodId == mMyApp.getActualPeriod()) { //todo status - period Name
             tvActiveStatus.text = getString(R.string.active)
         } else {
             tvActiveStatus.text = getString(R.string.notActive)
@@ -139,6 +106,8 @@ class MainActivity : AppCompatActivity() {
         buttonsPeriodAvailable()
     }
 
+
+    /********* observers **********/
     private val mainPeriodObserver: Observer<Period> =
         Observer<Period> { newPeriod -> // Update the UI, in this case, a TextView.
             period = newPeriod
@@ -159,22 +128,8 @@ class MainActivity : AppCompatActivity() {
             updateUi()
         }
 
+    /******* ! observers **********/
 
-    /*protected fun createFdbListeners() {
-        if (onlineMode) {
-            purchaseEventListener = ChildEventListeners.getPurchaseEventListener(this)
-            purchasesQuery = FirebaseHelper.purchasesSync(purchaseEventListener)
-            profitsEventListener = ChildEventListeners.getProfitEventListener(this)
-            profitsQuery = FirebaseHelper.profitsSync(profitsEventListener)
-        }
-    }
-
-    protected fun removeFdbListeners() {
-        if (onlineMode) {
-            purchasesQuery.removeEventListener(purchaseEventListener)
-            profitsQuery.removeEventListener(profitsEventListener)
-        }
-    }*/
 
     fun createRecyclerView() {
         val linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true)
@@ -319,7 +274,6 @@ class MainActivity : AppCompatActivity() {
         drawer.openDrawer(Gravity.LEFT) //Edit Gravity.START need API 14
     }
 
-    //****** ! left menu **********/
     fun setStatus1(view: View?) {
         setStatus(100)
     }
@@ -332,49 +286,38 @@ class MainActivity : AppCompatActivity() {
         setStatus(300)
     }
 
-    fun setStatus(statusId: Int) {
-        var statusId = statusId
+    fun setStatus( statusId: Int) {
+        var _statusId = statusId
         val v_status_1 = findViewById<View>(R.id.mainStatus1)
         val v_status_2 = findViewById<View>(R.id.mainStatus2)
         val v_status_3 = findViewById<View>(R.id.mainStatus3)
         v_status_1.background = ContextCompat.getDrawable(this, R.drawable.ic_status_plan)
         v_status_2.background = ContextCompat.getDrawable(this, R.drawable.ic_status_accrued)
         v_status_3.background = ContextCompat.getDrawable(this, R.drawable.ic_status_baught)
-        var query = "parent_id = " + "\"" + "main" + "\"" + " order by timestamp desc"
-        if (filterStatus == statusId) {
-            statusId = 0
+        if (currentFilterStatus == statusId) {
+            _statusId = 0
         } else {
-            when (statusId) {
+            when (_statusId) {
                 100 -> {
                     v_status_1.background =
                         ContextCompat.getDrawable(this, R.drawable.ic_status_plan_active)
-                    query = "status_id = $statusId and parent_id = \"main\" order by timestamp desc"
                 }
                 200 -> {
                     v_status_2.background =
                         ContextCompat.getDrawable(this, R.drawable.ic_status_accrued_active)
-                    query = "status_id = $statusId and parent_id = \"main\" order by timestamp desc"
                 }
                 300 -> {
                     v_status_3.background =
                         ContextCompat.getDrawable(this, R.drawable.ic_status_baught_active)
-                    query = "status_id = $statusId and parent_id = \"main\" order by timestamp desc"
                 }
             }
         }
-        filterStatus = statusId
-        //mMyApp.setStatusInMainActivity(statusId)
-        /*listPurchases = Purchase.getPurchasesFromDatabase(this, query, periodId)
-        adapter = PurchaseAdapter(listPurchases, this)
-        recyclerView!!.adapter = adapter
-        adapter.setListener { purchaseId ->
-            val intent = Intent(this@MainActivity, PurchaseActivity::class.java)
-            intent.putExtra("EXTRA_PURCHASE_ID", purchaseId)
-            startActivity(intent)
-        }*/
+        currentFilterStatus = _statusId
+        vm.getPurchases(periodId = period.id,
+                        statusId = _statusId)
     }
 
-    fun buttonsPeriodAvailable() {
+    private fun buttonsPeriodAvailable() {
         val previousPeriod = findViewById<View>(R.id.buttonPreviousPeriod)
         if (period.previousPeriodId != 0) {
             previousPeriod.background = ContextCompat.getDrawable(this, R.drawable.ic_arrow_left)
@@ -391,34 +334,32 @@ class MainActivity : AppCompatActivity() {
     }
 
     /******* Buttons  */
-    /*fun addPurchase(view: View?) {
+    fun addPurchase(view: View?) {
         val intent = Intent(this@MainActivity, PurchaseActivity::class.java)
         intent.putExtra("EXTRA_PURCHASE_ID", "0")
-        intent.putExtra("EXTRA_PARENT_ID", "main")
+        intent.putExtra("EXTRA_PARENT_ID", "-8")
         startActivity(intent)
-    }*/
+    }
 
     fun gotoProfits(view: View?) {
         val intent = Intent(this, ProfitsActivity::class.java)
         startActivity(intent)
     }
-    /*
+
 
     fun previousPeriod(view: View?) {
-        changePeriod(-1)
+        changePeriod(period.previousPeriodId)
     }
 
     fun nextPeriod(view: View?) {
-        changePeriod(+1)
-    }*/
+        changePeriod(period.nextPeriodId)
+    }
 
-    /*private fun changePeriod(position: Int) {
-        if (Period.neighborIsAvailable(this, periodId, position)) {
-            val intent = Intent(this, MainActivity::class.java)
-            mMyApp.setCurrentPeriod(periodId + position)
-            startActivity(intent)
+    private fun changePeriod(newPeriodId: Int) {
+        if (newPeriodId != 0) {
+            vm.getPeriodsData(newPeriodId)
         }
-    }*/
+    }
 
     //***** ! Buttons **********/
     override fun onBackPressed() {
@@ -441,12 +382,4 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    /*private fun clearReferences() {
-        val currActivity: Activity = mMyApp.getCurrentActivity()
-        if (this == currActivity) mMyApp.setCurrentActivity(null)
-    }*/
-
-    companion object {
-        private var back_pressed: Long = 0
-    }
 }

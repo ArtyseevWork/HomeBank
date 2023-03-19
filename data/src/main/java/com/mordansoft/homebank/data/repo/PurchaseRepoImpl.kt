@@ -47,6 +47,20 @@ class PurchaseRepoImpl (private val purchaseDao: PurchaseDao,
         }
     }
 
+    override suspend fun getMainPurchases(
+        parentId: Long,
+        periodId: Int,
+        statusId: Int
+    ): ArrayList<Purchase> {
+        var resultList: ArrayList<Purchase>
+        withContext(defaultDispatcher) {
+            resultList = purchaseDToPurchaseArray(purchaseDao.getMainPurchases(parentId = parentId,
+                                                                               periodId = periodId,
+                                                                               statusId = statusId))
+        }
+        return resultList
+    }
+
     /*********** mappers  ************/
     private fun purchaseToPurchaseD(purchase: Purchase): PurchaseD {
         return PurchaseD(

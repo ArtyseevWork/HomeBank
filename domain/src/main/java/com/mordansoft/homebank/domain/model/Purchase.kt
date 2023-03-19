@@ -8,8 +8,8 @@ data class Purchase(
     var description: String = "Your description",
     var price: Float = 100f,
     var count: Float = 1f,
-    var periodId: Int = -8,
-    var statusId: Int  = -8,
-    var parentId: Long = -8,
+    var periodId: Int = 1,
+    var statusId: Int  = 100,
+    var parentId: Long = 0,
     var repeater: Boolean  = false,
     var timestamp: Long = 0)

@@ -7,5 +7,6 @@ interface PurchaseRepo {
     suspend fun getPurchaseById(purchaseId: Long): Purchase
     suspend fun getDaughterPurchases(parentId : Long): ArrayList<Purchase>
     suspend fun getMainPurchases(parentId : Long, periodId : Int): ArrayList<Purchase>
+    suspend fun getMainPurchases(parentId : Long, periodId : Int, statusId : Int): ArrayList<Purchase>
     suspend fun insertTestPurchase(){    }
 }

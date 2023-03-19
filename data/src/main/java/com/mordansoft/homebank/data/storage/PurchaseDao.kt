@@ -17,6 +17,11 @@ interface PurchaseDao {
     @Query("SELECT * FROM purchase where parentId = :parentId and periodId = :periodId")
     suspend fun getMainPurchases(parentId : Long, periodId : Int): Array<PurchaseD>
 
+    @Query("SELECT * FROM purchase where parentId = :parentId " +
+                                    "and periodId = :periodId " +
+                                    "and statusId = :statusId")
+    suspend fun getMainPurchases(parentId : Long, periodId : Int, statusId : Int): Array<PurchaseD>
+
 
     @Query("SELECT * FROM purchase WHERE parentId = :parentId")
     suspend fun getDaughterPurchases(parentId: Long): Array<PurchaseD>

@@ -28,13 +28,13 @@ class MainViewModel(private val getMainPurchasesUc      : GetMainPurchasesUc,
     var accounting: LiveData<PeriodAccounting> = _accounting
 
 
-    /*fun getPurchases(){
+    fun getPurchases(periodId : Int, statusId : Int){
         viewModelScope.launch {
-            _purchases.value = getMainPurchasesUc.execute()
+            _purchases.value = getMainPurchasesUc.execute(periodId, statusId)
         }
     }
 
-    fun getAccounting(periodId : Int){ // todo delete arguments
+    /*fun getAccounting(periodId : Int){ // todo delete arguments
         viewModelScope.launch {
             _accounting.value = getPeriodAccountingUc.execute(periodId)
         }

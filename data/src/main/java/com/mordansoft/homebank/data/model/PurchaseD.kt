@@ -14,7 +14,7 @@ data class PurchaseD(
     val price: Float = 100f,
     val count: Float = 1f,
     val periodId: Int = 1,
-    val statusId: Int  = -8,
-    val parentId: Long = -8,
+    val statusId: Int  = 100,
+    val parentId: Long = 0,
     val repeater: Boolean  = false,
     val timestamp: Long = 0)
