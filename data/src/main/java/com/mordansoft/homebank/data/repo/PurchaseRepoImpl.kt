@@ -71,7 +71,6 @@ class PurchaseRepoImpl (private val purchaseDao: PurchaseDao,
     private fun purchaseToPurchaseD(purchase: Purchase): PurchaseD {
         return PurchaseD(
             id          = purchase.id,
-            idFdb       = purchase.idFdb,
             name        = purchase.name,
             description = purchase.description,
             price       = purchase.price,
@@ -87,7 +86,6 @@ class PurchaseRepoImpl (private val purchaseDao: PurchaseDao,
     private fun purchaseDToPurchase(purchaseD: PurchaseD): Purchase {
         return Purchase(
             id          = purchaseD.id,
-            idFdb       = purchaseD.idFdb,
             name        = purchaseD.name,
             description = purchaseD.description,
             price       = purchaseD.price,

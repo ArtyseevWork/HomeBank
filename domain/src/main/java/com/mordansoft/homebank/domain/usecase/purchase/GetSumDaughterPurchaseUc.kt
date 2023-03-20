@@ -7,7 +7,7 @@ class GetSumDaughterPurchaseUc(private val purchaseRepo: PurchaseRepo) {
 
     suspend fun execute(parentId : Long): Float{
         var purchasesSum: Float = 0f
-        if (parentId != 0L) {
+        if (parentId != Purchase.DEFAULT_ID) { // not new purchases
             val daughterPurchases = purchaseRepo.getDaughterPurchases(parentId)
 
             for (e in daughterPurchases){

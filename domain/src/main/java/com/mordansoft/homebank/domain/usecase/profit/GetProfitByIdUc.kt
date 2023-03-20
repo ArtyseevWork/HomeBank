@@ -7,7 +7,7 @@ class GetProfitByIdUc(private val profitRepo: ProfitRepo) {
 
     suspend fun execute(profitId: Long): Profit{
         var profit : Profit = Profit()
-        if (profitId != 0L){                                     // not new Profit
+        if (profitId != Profit.DEFAULT_ID){                                     // not new Profit
             profit = profitRepo.getProfitById(profitId = profitId)
         }
         return profit

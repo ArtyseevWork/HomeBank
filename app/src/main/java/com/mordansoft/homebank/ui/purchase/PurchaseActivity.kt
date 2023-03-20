@@ -18,19 +18,20 @@ import com.mordansoft.homebank.R
 import com.mordansoft.homebank.app.App
 import com.mordansoft.homebank.databinding.ActivityPurchaseBinding
 import com.mordansoft.homebank.domain.model.Period
+import com.mordansoft.homebank.domain.model.Profit
 import com.mordansoft.homebank.domain.model.Purchase
 import com.mordansoft.homebank.ui.StubActivity
 import com.mordansoft.homebank.ui.main.MainActivity
 import com.mordansoft.homebank.ui.main.PurchaseAdapter
 
 class PurchaseActivity : AppCompatActivity() {
-    private var periodId: Int = 0
+    private var periodId: Int = Period.DEFAULT_ID
     private lateinit var adapter: PurchaseAdapter
     var period  : Period = Period()
     var purchase: Purchase = Purchase()
     private var listPurchases: ArrayList<Purchase> = ArrayList()
-    private var purchaseId : Long = 0
-    private var parentId   : Long = 0
+    private var purchaseId : Long = Purchase.DEFAULT_ID
+    private var parentId   : Long = Purchase.DEFAULT_PARENT
     private lateinit var vm : PurchaseViewModel
     private var sumOfChildrenSpending: Float = 0F
 
@@ -105,18 +106,23 @@ class PurchaseActivity : AppCompatActivity() {
 
 
         if (purchase.repeater) {
-            binding.purchaseRepeat.setBackground(ContextCompat.getDrawable(this, R.drawable.ic_checkbox_true))
+            binding.purchaseRepeat.background = ContextCompat.getDrawable(this, R.drawable.ic_checkbox_true)
         } else {
-            binding.purchaseRepeat.setBackground(ContextCompat.getDrawable(this, R.drawable.ic_checkbox_false))
+            binding.purchaseRepeat.background = ContextCompat.getDrawable(this, R.drawable.ic_checkbox_false)
         }
         binding.profitAmount.addTextChangedListener(textWatcher)
         binding.profitDate.addTextChangedListener(textWatcher)
 
         val v_addButton = findViewById<View>(R.id.btn_add)
-        v_addButton.visibility = View.GONE
+        if (purchase.id == Purchase.DEFAULT_ID ){ // new purchase
+            v_addButton.visibility = View.GONE
+        } else {
+            v_addButton.visibility = View.VISIBLE
+        }
+
         getSum()
 
-        binding.purchasePeriod.setText(Period.getPeriodName())
+        binding.purchasePeriod.text = period.name
 
         /*if (purchase.periodId == mMyApp.getActualPeriod()) {// todo period status
             binding.periodActive.setText(getString(R.string.active))
@@ -137,11 +143,11 @@ class PurchaseActivity : AppCompatActivity() {
          v_status_2.background = ContextCompat.getDrawable(this, R.drawable.ic_status_accrued)
          v_status_3.background = ContextCompat.getDrawable(this, R.drawable.ic_status_baught)
          when (statusId) {
-             100 -> v_status_1.background =
+             Purchase.STATUS_PLANNED -> v_status_1.background =
                  ContextCompat.getDrawable(this, R.drawable.ic_status_plan_active)
-             200 -> v_status_2.background =
+             Purchase.STATUS_DELAYED -> v_status_2.background =
                  ContextCompat.getDrawable(this, R.drawable.ic_status_accrued_active)
-             300 -> v_status_3.background =
+             Purchase.STATUS_PURCHASED -> v_status_3.background =
                  ContextCompat.getDrawable(this, R.drawable.ic_status_baught_active)
          }
      }
@@ -157,15 +163,15 @@ class PurchaseActivity : AppCompatActivity() {
      }
 
      fun setStatus1(view: View?) {
-         setStatus(100)
+         setStatus(Purchase.STATUS_PLANNED)
      }
 
      fun setStatus2(view: View?) {
-         setStatus(200)
+         setStatus(Purchase.STATUS_DELAYED)
      }
 
      fun setStatus3(view: View?) {
-         setStatus(300)
+         setStatus(Purchase.STATUS_PURCHASED)
      }
 
      fun plusCount(view: View?) {
@@ -185,7 +191,6 @@ class PurchaseActivity : AppCompatActivity() {
      fun editPurchase(view: View) {
          val purchaseEditable = Purchase(
              id          = purchaseId,
-             idFdb       = purchase.idFdb,
              name        = binding.profitName.text.toString(),
              description = binding.profitDescription.text.toString(),
              price       = binding.profitAmount.text.toString().toFloat(),
@@ -209,7 +214,7 @@ class PurchaseActivity : AppCompatActivity() {
          ) { dialog, id ->
              val intent: Intent
              try {
-                 if (listPurchases.size < 1) {
+                 if (listPurchases.isEmpty()) {
                      vm.deletePurchase(purchase)
                      val toast = Toast.makeText(view.context, "Покупка удалена", Toast.LENGTH_LONG)
                      toast.show()
@@ -236,7 +241,7 @@ class PurchaseActivity : AppCompatActivity() {
      }
 
      private fun createRecyclerView() {
-         val recyclerView: RecyclerView = findViewById(R.id.mainPurchasesRecyclerView)
+         val recyclerView: RecyclerView = findViewById(R.id.childPurchasesRecyclerView)
          val linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true)
          linearLayoutManager.reverseLayout = false
          linearLayoutManager.stackFromEnd = false
@@ -257,7 +262,7 @@ class PurchaseActivity : AppCompatActivity() {
 
      fun addPurchase(view: View?) {
          val intent = Intent(this, PurchaseActivity::class.java)
-         intent.putExtra("EXTRA_PURCHASE_ID", 0) // new Purchase
+         intent.putExtra("EXTRA_PURCHASE_ID", Purchase.DEFAULT_ID) // new Purchase
          intent.putExtra("EXTRA_PARENT_ID", purchaseId)
          intent.putExtra("EXTRA_PERIOD_ID", period.id)
          startActivity(intent)
@@ -293,7 +298,7 @@ class PurchaseActivity : AppCompatActivity() {
 
      fun goBack() {
          val intent: Intent
-         if (parentId != 0L) {
+         if (parentId != Purchase.DEFAULT_PARENT) {
              intent = Intent(this, PurchaseActivity::class.java)
              intent.putExtra("EXTRA_PURCHASE_ID", parentId)
          } else {

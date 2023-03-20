@@ -38,26 +38,31 @@ class PurchaseAdapter(listPurchase: ArrayList<Purchase>, mContext: Context) :
         val purchase: Purchase = listPurchase[i]
         val cardView = viewHolder.cardView
         viewHolder.v_price.text = (purchase.price * purchase.count).toString()
-        if (purchase.statusId === 100) {
-            viewHolder.v_border.background =
-                ContextCompat.getDrawable(mContext, R.drawable.ic_fill_100)
-        } else if (purchase.statusId === 200) {
-            viewHolder.v_border.background =
-                ContextCompat.getDrawable(mContext, R.drawable.ic_fill_200)
-        } else if (purchase.statusId === 300) {
-            viewHolder.v_border.background =
-                ContextCompat.getDrawable(mContext, R.drawable.ic_fill_300)
-        } else if (purchase.statusId === 400) {
-            viewHolder.v_border.background =
-                ContextCompat.getDrawable(mContext, R.drawable.ic_fill_400)
+        when (purchase.statusId) {
+            Purchase.STATUS_PLANNED -> {
+                viewHolder.v_border.background =
+                    ContextCompat.getDrawable(mContext, R.drawable.ic_fill_100)
+            }
+            Purchase.STATUS_DELAYED -> {
+                viewHolder.v_border.background =
+                    ContextCompat.getDrawable(mContext, R.drawable.ic_fill_200)
+            }
+            Purchase.STATUS_PURCHASED -> {
+                viewHolder.v_border.background =
+                    ContextCompat.getDrawable(mContext, R.drawable.ic_fill_300)
+            }
+            Purchase.STATUS_REMOVED -> {
+                viewHolder.v_border.background =
+                    ContextCompat.getDrawable(mContext, R.drawable.ic_fill_400)
+            }
         }
         //viewHolder.v_status.setText(Status.getPurchaseNameById(mContext, purchase.status))
         //val countOfChildren: Int = Purchase.getCountOfChildren(mContext, purchase.id)
         val countOfChildren: Int =0
         if (countOfChildren > 0) {
-            viewHolder.v_name.setText(purchase.name + " (" + countOfChildren + ")")
+            viewHolder.v_name.text = purchase.name + " (" + countOfChildren + ")"
         } else {
-            viewHolder.v_name.setText(java.lang.String.valueOf(purchase.name))
+            viewHolder.v_name.text = java.lang.String.valueOf(purchase.name)
         }
         if (purchase.count > 1) {
             viewHolder.v_count.text = (purchase.count.toString() + " * " + purchase.price.toString())

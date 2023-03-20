@@ -8,7 +8,7 @@ class SetPurchaseUc(private val purchaseRepo: PurchaseRepo) {
     suspend fun execute(purchase: Purchase){
         var timestamp: Long = System.currentTimeMillis()
             purchase.timestamp = timestamp
-        if (purchase.id != 0L){ // old purchase
+        if (purchase.id != Purchase.DEFAULT_ID){   //not new purchase
             purchaseRepo.updatePurchase(purchase)
         } else { // new purchase
             purchase.id = timestamp

@@ -29,7 +29,6 @@ import kotlin.Int
 
 
 class ProfitsActivity : AppCompatActivity() {
-    private var periodId = 0
 
     lateinit var myApp: App
     private var listProfits: ArrayList<Profit> = ArrayList()
@@ -108,6 +107,7 @@ class ProfitsActivity : AppCompatActivity() {
                 override fun onClick(view: View, position: Long) {
                     val intent = Intent(view.context, ProfitActivity::class.java)
                     intent.putExtra("EXTRA_PROFIT_ID", position)
+                    intent.putExtra("EXTRA_PERIOD_ID", period.id)
                     startActivity(intent)
                 }
             }
@@ -124,21 +124,21 @@ class ProfitsActivity : AppCompatActivity() {
     }
 
     private fun changePeriod(newPeriodId: Int) {
-        if (newPeriodId != 0) {
+        if (newPeriodId != Period.DEFAULT_ID) {
             vm.getPeriodsData(newPeriodId)
         }
     }
 
     private fun buttonsPeriodAvailable() {
         val previousPeriod = findViewById<View>(R.id.buttonPreviousPeriod)
-        if (period.previousPeriodId != 0) {
+        if (period.previousPeriodId != Period.DEFAULT_ID) {
             previousPeriod.background = ContextCompat.getDrawable(this, R.drawable.ic_arrow_left)
         } else {
             previousPeriod.background =
                 ContextCompat.getDrawable(this, R.drawable.ic_arrow_left_off)
         }
         val nextPeriod = findViewById<View>(R.id.buttonNextPeriod)
-        if (period.nextPeriodId != 0) {
+        if (period.nextPeriodId != Period.DEFAULT_ID) {
             nextPeriod.background = ContextCompat.getDrawable(this, R.drawable.ic_arrow_right)
         } else {
             nextPeriod.background = ContextCompat.getDrawable(this, R.drawable.ic_arrow_right_off)
@@ -147,7 +147,7 @@ class ProfitsActivity : AppCompatActivity() {
 
     fun addProfit(view: View?) {
         val intent = Intent(this, ProfitActivity::class.java)
-        intent.putExtra("EXTRA_PROFIT_ID", 0) // 0 - new profit
+        intent.putExtra("EXTRA_PROFIT_ID", Profit.DEFAULT_ID)
         intent.putExtra("EXTRA_PERIOD_ID", period.id)
         startActivity(intent)
     }

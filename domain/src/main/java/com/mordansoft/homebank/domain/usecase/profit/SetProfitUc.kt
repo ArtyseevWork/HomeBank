@@ -8,7 +8,7 @@ class SetProfitUc(private val profitRepo: ProfitRepo) {
     suspend fun execute(profit: Profit){
         var timestamp: Long = System.currentTimeMillis()
         profit.timestamp = timestamp
-        if (profit.id != 0L){ // old profit
+        if (profit.id != Profit.DEFAULT_ID){ // not new profit
             profitRepo.updateProfit(profit)
         } else { // new profit
             profit.id = timestamp

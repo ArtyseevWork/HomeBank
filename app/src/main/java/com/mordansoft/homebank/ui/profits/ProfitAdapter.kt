@@ -53,18 +53,25 @@ class ProfitAdapter(listProfit: ArrayList<Profit>, mContext: Context) :
         val dateFormat = SimpleDateFormat("dd-MM-yyyy")
         viewHolder.v_date.setText(dateFormat.format(normalTime))
 
-        if (profit.statusId == 100) {
-            viewHolder.v_border.background =
-                ContextCompat.getDrawable(mContext, R.drawable.ic_fill_100)
-        } else if (profit.statusId == 200) {
-            viewHolder.v_border.background =
-                ContextCompat.getDrawable(mContext, R.drawable.ic_fill_200)
-        } else if (profit.statusId == 300) {
-            viewHolder.v_border.background =
-                ContextCompat.getDrawable(mContext, R.drawable.ic_fill_300)
-        } else if (profit.statusId  == 400) {
-            viewHolder.v_border.background =
-                ContextCompat.getDrawable(mContext, R.drawable.ic_fill_400)
+
+        when (profit.statusId) {
+
+            Profit.STATUS_PLANNED -> { //todo
+                viewHolder.v_border.background =
+                    ContextCompat.getDrawable(mContext, R.drawable.ic_fill_100)
+            }
+            Profit.STATUS_ACCRUED -> {
+                viewHolder.v_border.background =
+                    ContextCompat.getDrawable(mContext, R.drawable.ic_fill_200)
+            }
+            Profit.STATUS_RECEIVED -> {
+                viewHolder.v_border.background =
+                    ContextCompat.getDrawable(mContext, R.drawable.ic_fill_300)
+            }
+            Profit.STATUS_REMOVED -> {
+                viewHolder.v_border.background =
+                    ContextCompat.getDrawable(mContext, R.drawable.ic_fill_400)
+            }
         }
 
         cardView.setOnClickListener {

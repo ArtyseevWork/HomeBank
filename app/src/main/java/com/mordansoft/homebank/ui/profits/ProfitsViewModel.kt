@@ -39,17 +39,5 @@ class ProfitsViewModel(private val getMainProfitsUc       : GetMainProfitsUc,
         }
     }
 
-    /*fun getProfits(){
-        viewModelScope.launch {
-            _profits.value = getMainProfitsUc.execute()
-        }
-    }
-
-    fun getAccounting(periodId : Int){  // todo delete arguments
-        viewModelScope.launch {
-            _accounting.value = getProfitsAccountingUc.execute(periodId = periodId)
-        }
-    }*/
-
 }
 

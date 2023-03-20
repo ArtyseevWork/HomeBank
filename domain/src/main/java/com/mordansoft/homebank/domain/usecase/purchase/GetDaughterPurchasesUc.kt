@@ -7,10 +7,10 @@ class GetDaughterPurchasesUc(private val purchaseRepo: PurchaseRepo) {
 
     suspend fun execute(parentId: Long): ArrayList<Purchase> {
         var result :ArrayList<Purchase>
-        if (parentId != 0L ){
+        if (parentId != Purchase.DEFAULT_ID ){ // not new purchase
             result = purchaseRepo.getDaughterPurchases(parentId)
         } else {
-            result = ArrayList()
+            result = ArrayList() // return empty list
         }
         return result
     }

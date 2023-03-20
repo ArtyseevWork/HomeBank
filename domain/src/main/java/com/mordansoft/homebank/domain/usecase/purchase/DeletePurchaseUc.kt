@@ -6,8 +6,8 @@ import com.mordansoft.homebank.domain.repo.PurchaseRepo
 class DeletePurchaseUc(private val purchaseRepo: PurchaseRepo) {
 
     suspend fun execute(purchase: Purchase){
-        if (purchase.id != 0L){
-            purchase.statusId = 400
+        if (purchase.id != Purchase.DEFAULT_ID){ // not new purchase
+            purchase.statusId = Purchase.STATUS_REMOVED
             purchaseRepo.updatePurchase(purchase)
         }
     }

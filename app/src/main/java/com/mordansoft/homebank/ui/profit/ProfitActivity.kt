@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.mordansoft.homebank.R
 import com.mordansoft.homebank.app.App
 import com.mordansoft.homebank.domain.model.Profit
-import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import androidx.lifecycle.Observer
@@ -26,8 +25,8 @@ class ProfitActivity : AppCompatActivity() {
     var profit: Profit = Profit()
     var period : Period = Period()
     var normalTime: Date = Date()
-    var periodId : Int = 0
-    var profitId : Long = 0
+    var periodId : Int = Period.DEFAULT_ID
+    var profitId : Long = Profit.DEFAULT_ID
 
     private lateinit var vm : ProfitViewModel
 
@@ -58,9 +57,7 @@ class ProfitActivity : AppCompatActivity() {
     private val profitObserver: androidx.lifecycle.Observer<Profit> =
         Observer<Profit> { newProfit ->
             profit = newProfit
-            if (periodId == 0) {
-                periodId = profit.periodId
-            }
+            periodId = profit.periodId
             vm.getPeriod(periodId)
             updateUi()
         }
@@ -90,7 +87,6 @@ class ProfitActivity : AppCompatActivity() {
         try {
             val profitEditable = Profit(
                 id = profit.id,
-                        idFdb = profit.idFdb,
                         name = binding.profitName.text.toString(),
                         description = binding.profitDescription.text.toString(),
                         amount = binding.profitAmount.text.toString().toFloat(),
@@ -142,15 +138,15 @@ class ProfitActivity : AppCompatActivity() {
     }
 
     fun setStatus1(view: View?) {
-        setStatus(100)
+        setStatus(Profit.STATUS_PLANNED)
     }
 
     fun setStatus2(view: View?) {
-        setStatus(200)
+        setStatus(Profit.STATUS_ACCRUED)
     }
 
     fun setStatus3(view: View?) {
-        setStatus(300)
+        setStatus(Profit.STATUS_RECEIVED)
     }
 
     fun setStatus(statusId: Int) {
@@ -162,11 +158,11 @@ class ProfitActivity : AppCompatActivity() {
         v_status_2.background = ContextCompat.getDrawable(this, R.drawable.ic_status_accrued)
         v_status_3.background = ContextCompat.getDrawable(this, R.drawable.ic_status_canceled)
         when (statusId) {
-            100 -> v_status_1.background =
+            Profit.STATUS_PLANNED -> v_status_1.background =
                 ContextCompat.getDrawable(this, R.drawable.ic_status_plan_active)
-            200 -> v_status_2.background =
+            Profit.STATUS_ACCRUED -> v_status_2.background =
                 ContextCompat.getDrawable(this, R.drawable.ic_status_accrued_active)
-            300 -> v_status_3.background =
+            Profit.STATUS_RECEIVED -> v_status_3.background =
                 ContextCompat.getDrawable(this, R.drawable.ic_status_canceled_active)
         }
     }
@@ -183,13 +179,13 @@ class ProfitActivity : AppCompatActivity() {
 
     fun plusDate(view: View?) {
         val dateOld: Long = profit.date
-        profit.date = (dateOld + 86400)
+        profit.date = (dateOld + Period.ONE_DAY_MILLIS)
         setDate()
     }
 
     fun minusDate(view: View?) {
         val dateOld: Long = profit.date
-        profit.date = (dateOld - 86400)
+        profit.date = (dateOld - Period.ONE_DAY_MILLIS)
         setDate()
     }
 

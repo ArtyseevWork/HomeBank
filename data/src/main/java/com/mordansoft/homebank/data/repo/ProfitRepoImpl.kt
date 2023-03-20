@@ -46,7 +46,6 @@ class ProfitRepoImpl (private val profitDao: ProfitDao,
     private fun profitToProfitD(profit: Profit): ProfitD {
         return ProfitD(
             id          = profit.id         ,
-            idFdb       = profit.idFdb      ,
             name        = profit.name       ,
             description = profit.description,
             amount      = profit.amount     ,
@@ -61,7 +60,6 @@ class ProfitRepoImpl (private val profitDao: ProfitDao,
     private fun profitDToProfit(profitD: ProfitD): Profit {
         return Profit(
             id          = profitD.id         ,
-            idFdb       = profitD.idFdb      ,
             name        = profitD.name       ,
             description = profitD.description,
             amount      = profitD.amount     ,

@@ -1,6 +1,5 @@
 package com.mordansoft.homebank.ui.main
 
-import android.app.Application
 import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
@@ -36,7 +35,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var adapter: PurchaseAdapter
     private lateinit var vm : MainViewModel
     private var period : Period  = Period()
-    private var back_pressed: Long = 0
+    private var backPressed: Long = 0
 
     @javax.inject.Inject
     lateinit var vmFactory: MainViewModelFactory
@@ -275,15 +274,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun setStatus1(view: View?) {
-        setStatus(100)
+        setStatus(Purchase.STATUS_PLANNED)
     }
 
     fun setStatus2(view: View?) {
-        setStatus(200)
+        setStatus(Purchase.STATUS_DELAYED)
     }
 
     fun setStatus3(view: View?) {
-        setStatus(300)
+        setStatus(Purchase.STATUS_PURCHASED)
     }
 
     fun setStatus( statusId: Int) {
@@ -298,15 +297,15 @@ class MainActivity : AppCompatActivity() {
             _statusId = 0
         } else {
             when (_statusId) {
-                100 -> {
+                Purchase.STATUS_PLANNED -> {
                     v_status_1.background =
                         ContextCompat.getDrawable(this, R.drawable.ic_status_plan_active)
                 }
-                200 -> {
+                Purchase.STATUS_DELAYED -> {
                     v_status_2.background =
                         ContextCompat.getDrawable(this, R.drawable.ic_status_accrued_active)
                 }
-                300 -> {
+                Purchase.STATUS_PURCHASED -> {
                     v_status_3.background =
                         ContextCompat.getDrawable(this, R.drawable.ic_status_baught_active)
                 }
@@ -319,14 +318,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun buttonsPeriodAvailable() {
         val previousPeriod = findViewById<View>(R.id.buttonPreviousPeriod)
-        if (period.previousPeriodId != 0) {
+        if (period.previousPeriodId != Period.DEFAULT_ID) {
             previousPeriod.background = ContextCompat.getDrawable(this, R.drawable.ic_arrow_left)
         } else {
             previousPeriod.background =
                 ContextCompat.getDrawable(this, R.drawable.ic_arrow_left_off)
         }
         val nextPeriod = findViewById<View>(R.id.buttonNextPeriod)
-        if (period.nextPeriodId != 0) {
+        if (period.nextPeriodId != Period.DEFAULT_ID) {
             nextPeriod.background = ContextCompat.getDrawable(this, R.drawable.ic_arrow_right)
         } else {
             nextPeriod.background = ContextCompat.getDrawable(this, R.drawable.ic_arrow_right_off)
@@ -336,8 +335,8 @@ class MainActivity : AppCompatActivity() {
     /******* Buttons  */
     fun addPurchase(view: View?) {
         val intent = Intent(this@MainActivity, PurchaseActivity::class.java)
-        intent.putExtra("EXTRA_PURCHASE_ID", 0)
-        intent.putExtra("EXTRA_PARENT_ID", 0)
+        intent.putExtra("EXTRA_PURCHASE_ID", Purchase.DEFAULT_ID)
+        intent.putExtra("EXTRA_PARENT_ID", Purchase.PARENT_MAIN)
         intent.putExtra("EXTRA_PERIOD_ID", period.id)
         startActivity(intent)
     }
@@ -357,7 +356,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun changePeriod(newPeriodId: Int) {
-        if (newPeriodId != 0) {
+        if (newPeriodId != Period.DEFAULT_ID) {
             vm.getPeriodsData(newPeriodId)
         }
     }
@@ -368,7 +367,7 @@ class MainActivity : AppCompatActivity() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START)
         } else {
-            if (back_pressed + 2000 > System.currentTimeMillis()) {
+            if (backPressed + 2000 > System.currentTimeMillis()) {
                 val intent = Intent(Intent.ACTION_MAIN)
                 intent.addCategory(Intent.CATEGORY_HOME)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
@@ -378,7 +377,7 @@ class MainActivity : AppCompatActivity() {
                     baseContext, "Press once again to exit!",
                     Toast.LENGTH_SHORT
                 ).show()
-                back_pressed = System.currentTimeMillis()
+                backPressed = System.currentTimeMillis()
             }
         }
     }

@@ -7,7 +7,7 @@ class GetPurchaseByIdUc(private val purchaseRepo: PurchaseRepo) {
 
     suspend fun execute(purchaseId: Long): Purchase{
         val purchase : Purchase
-        if (purchaseId == 0L){
+        if (purchaseId == Purchase.DEFAULT_ID){ // new purchase
             purchase = Purchase()
         } else {
             purchase = purchaseRepo.getPurchaseById(purchaseId = purchaseId)

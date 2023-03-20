@@ -1,7 +1,9 @@
 package com.mordansoft.homebank.data.model
+import com.mordansoft.homebank.domain.model.Preferences
 
 data class PreferencesD(
-    var activePeriod: Int = 1,
-    var timestamp: Long = 0,
-    var profitsMode: Int = 0,  //1 - planing mode (profits from previous period), 0 - current mode (profits from current period): Int = 0
-    var onlineMode: Boolean = false)
+    var activePeriod: Int     = Preferences.DEFAULT_ACTIVE_PERIOD,
+    var timestamp   : Long    = Preferences.DEFAULT_TIMESTAMP    ,
+    var profitsMode : Int     = Preferences.DEFAULT_PROFITS_MODE ,
+    var onlineMode  : Boolean = Preferences.DEFAULT_ONLINE_MODE  )
+

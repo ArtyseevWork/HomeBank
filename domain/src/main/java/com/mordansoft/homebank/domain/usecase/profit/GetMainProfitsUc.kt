@@ -7,7 +7,7 @@ import com.mordansoft.homebank.domain.repo.ProfitRepo
 class GetMainProfitsUc(private val profitRepo: ProfitRepo) {
 
     suspend fun execute(periodId : Int): ArrayList<Profit> {
-        profitRepo.insertTestProfit()
+        profitRepo.insertTestProfit()       // todo
         return profitRepo.getMainProfits(periodId = periodId)
     }
 

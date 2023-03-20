@@ -1,7 +1,6 @@
 package com.mordansoft.homebank.domain.usecase.period
 
-import com.mordansoft.homebank.domain.model.PeriodAccounting
-import com.mordansoft.homebank.domain.model.Status
+import com.mordansoft.homebank.domain.model.*
 import com.mordansoft.homebank.domain.repo.PreferencesRepo
 import com.mordansoft.homebank.domain.repo.ProfitRepo
 import com.mordansoft.homebank.domain.repo.PurchaseRepo
@@ -19,26 +18,26 @@ class GetPeriodAccountingUc(private val profitRepo: ProfitRepo,
         var balanceFact  : Float = 0F
 
         var periodOfProfits = periodId
-        if(preferencesRepo.getPreferences().profitsMode == 1){
+        if(preferencesRepo.getPreferences().profitsMode == Preferences.PLANING_MODE){
             periodOfProfits -- //get profits of previous period
         }
         var periodProfits = profitRepo.getMainProfits(periodId = periodOfProfits)
 
         for (profit in  periodProfits){
-            if (profit.statusId < Status.REMOVED ) {
+            if (profit.statusId < Profit.STATUS_REMOVED ) {
                 capitalPlan += profit.amount
-                if (profit.statusId == Status.PURCHASED) {
+                if (profit.statusId == Profit.STATUS_RECEIVED) {
                     capitalFact += profit.amount
                 }
             }
         }
 
-        var periodPurchases = purchaseRepo.getMainPurchases(periodId = periodId, parentId = 0)
+        var periodPurchases = purchaseRepo.getMainPurchases(periodId = periodId, parentId = Purchase.PARENT_MAIN)
         for (purchase in  periodPurchases){
-            if (purchase.statusId < Status.REMOVED){
+            if (purchase.statusId < Purchase.STATUS_REMOVED){
                 val purchaseAmount : Float  = purchase.count * purchase.price
                 expencesPlan += purchaseAmount
-                if (purchase.statusId == Status.PURCHASED) {
+                if (purchase.statusId == Purchase.STATUS_PURCHASED) {
                     expencesFact += purchaseAmount
                 }
             }
