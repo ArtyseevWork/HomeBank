@@ -49,13 +49,15 @@ class AppModule(val context: Context) {
                                         getDaughterPurchasesUc   : GetDaughterPurchasesUc,
                                         getSumDaughterPurchaseUc : GetSumDaughterPurchaseUc,
                                         setPurchaseUc            : SetPurchaseUc,
-                                        deletePurchaseUc         : DeletePurchaseUc
+                                        deletePurchaseUc         : DeletePurchaseUc,
+                                        getPeriodUc              : GetPeriodUc
                                         ) : PurchaseViewModelFactory{
         return PurchaseViewModelFactory(getPurchaseByIdUc,
                                         getDaughterPurchasesUc,
                                         getSumDaughterPurchaseUc,
                                         setPurchaseUc,
-                                        deletePurchaseUc
+                                        deletePurchaseUc,
+                                        getPeriodUc
         )
     }
 

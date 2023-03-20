@@ -6,6 +6,12 @@ import com.mordansoft.homebank.domain.repo.PurchaseRepo
 class GetDaughterPurchasesUc(private val purchaseRepo: PurchaseRepo) {
 
     suspend fun execute(parentId: Long): ArrayList<Purchase> {
-        return purchaseRepo.getDaughterPurchases(parentId)
+        var result :ArrayList<Purchase>
+        if (parentId != 0L ){
+            result = purchaseRepo.getDaughterPurchases(parentId)
+        } else {
+            result = ArrayList()
+        }
+        return result
     }
 }

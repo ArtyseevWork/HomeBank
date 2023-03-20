@@ -6,5 +6,6 @@ interface ProfitRepo {
     suspend fun updateProfit(profit: Profit)
     suspend fun getProfitById(profitId: Long): Profit
     suspend fun getMainProfits(periodId : Int): ArrayList<Profit>
+    suspend fun insertProfit(profit: Profit)
     suspend fun insertTestProfit(){    }
 }

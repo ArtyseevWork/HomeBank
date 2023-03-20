@@ -24,7 +24,7 @@ class GetPeriodAccountingUc(private val profitRepo: ProfitRepo,
         }
         var periodProfits = profitRepo.getMainProfits(periodId = periodOfProfits)
 
-        for (profit in  periodProfits){ //todo refactor to when
+        for (profit in  periodProfits){
             if (profit.statusId < Status.REMOVED ) {
                 capitalPlan += profit.amount
                 if (profit.statusId == Status.PURCHASED) {
@@ -33,7 +33,7 @@ class GetPeriodAccountingUc(private val profitRepo: ProfitRepo,
             }
         }
 
-        var periodPurchases = purchaseRepo.getMainPurchases(periodId = periodId, parentId = -8) // todo period-1
+        var periodPurchases = purchaseRepo.getMainPurchases(periodId = periodId, parentId = 0)
         for (purchase in  periodPurchases){
             if (purchase.statusId < Status.REMOVED){
                 val purchaseAmount : Float  = purchase.count * purchase.price

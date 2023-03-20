@@ -24,15 +24,13 @@ import com.mordansoft.homebank.ui.main.MainActivity
 import com.mordansoft.homebank.ui.main.PurchaseAdapter
 
 class PurchaseActivity : AppCompatActivity() {
-    //private int periodId;
-    private lateinit var recyclerView: RecyclerView
+    private var periodId: Int = 0
     private lateinit var adapter: PurchaseAdapter
-    lateinit var purchase: Purchase
+    var period  : Period = Period()
+    var purchase: Purchase = Purchase()
     private var listPurchases: ArrayList<Purchase> = ArrayList()
-    private var closePeriodMode = false
-    private var purchaseId: Long = 0
-    private var parentId: Long = 0
-    lateinit var mMyApp: App
+    private var purchaseId : Long = 0
+    private var parentId   : Long = 0
     private lateinit var vm : PurchaseViewModel
     private var sumOfChildrenSpending: Float = 0F
 
@@ -44,17 +42,17 @@ class PurchaseActivity : AppCompatActivity() {
         ActivityPurchaseBinding.inflate(layoutInflater);
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mMyApp = this.applicationContext as App
         (applicationContext as App).appComponent.inject(this)
         setContentView(binding.root);
 
-
         val arguments = intent.extras
-        closePeriodMode = arguments!!.getBoolean("EXTRA_CLOSE_PERIOD_MODE")
-        purchaseId = arguments.getLong("EXTRA_PURCHASE_ID")
+        if (arguments != null) {
+            purchaseId = arguments.getLong("EXTRA_PURCHASE_ID")
+            parentId   = arguments.getLong("EXTRA_PARENT_ID")
+            periodId   = arguments.getInt ("EXTRA_PERIOD_ID")
+        }
 
         vm = ViewModelProvider(this, vmFactory)[PurchaseViewModel::class.java]
 
@@ -65,11 +63,13 @@ class PurchaseActivity : AppCompatActivity() {
         vm.daughterPurchases.observe(this,daughterPurchaseObserver)
         vm.daughterPurchaseSum.observe(this, daughterPurchaseSumObserver)
         vm.purchase.observe(this, purchaseObserver)
+        vm.period.observe(this, mainPeriodObserver)
     }
 
     private val purchaseObserver: Observer<Purchase> =
         Observer<Purchase> { newPurchase ->
             purchase = newPurchase
+            vm.getPeriod(purchase.periodId)
             updateUi()
         }
 
@@ -81,6 +81,11 @@ class PurchaseActivity : AppCompatActivity() {
             }
         }
 
+    private val mainPeriodObserver: Observer<Period> =
+        Observer<Period> { newPeriod -> // Update the UI, in this case, a TextView.
+            period = newPeriod
+            updateUi()
+        }
 
     private val daughterPurchaseSumObserver: Observer<Float> =
         Observer<Float> { newSumDaughterPurchases ->
@@ -88,11 +93,11 @@ class PurchaseActivity : AppCompatActivity() {
             updateUi()
         }
 
-    fun updateUi(){
+    private fun updateUi(){
         binding.profitDescription.setText(purchase.description)
         binding.profitName.setText(purchase.name)
 
-        val v_purchaseTreeOfParents = findViewById<TextView>(R.id.purchaseTreeOfParents)
+        val v_purchaseTreeOfParents = findViewById<TextView>(R.id.purchaseTreeOfParents)//todo
         //v_purchaseTreeOfParents.setText(Purchase.getParentsTree(this, purchaseId))
         binding.profitAmount.setText(java.lang.String.valueOf(purchase.price))
         setStatus(purchase.statusId)
@@ -110,22 +115,17 @@ class PurchaseActivity : AppCompatActivity() {
         val v_addButton = findViewById<View>(R.id.btn_add)
         v_addButton.visibility = View.GONE
         getSum()
-        buttonsPeriodAvailable()
 
-        if (purchase.parentId == -8L) {
-            binding.purchasePeriod.setText(Period.getPeriodName())
-            if (purchase.periodId == mMyApp.getActualPeriod()) {
-                binding.periodActive.setText(getString(R.string.active))
-            } else {
-                binding.periodActive.setText(getString(R.string.notActive))
-            }
+        binding.purchasePeriod.setText(Period.getPeriodName())
+
+        /*if (purchase.periodId == mMyApp.getActualPeriod()) {// todo period status
+            binding.periodActive.setText(getString(R.string.active))
         } else {
-            binding.purchasePeriod.setText(Period.getPeriodName())
-            binding.periodActive.setText(R.string.daughterPurchase)
-        }
+            binding.periodActive.setText(getString(R.string.notActive))
+        }*/
 
-        binding.profitDate.setText(java.lang.String.valueOf(purchase.count))
-
+        binding.purchasePeriod.text = period.name
+        binding.profitDate.setText(purchase.count.toString())
     }
 
      private fun setStatus(statusId: Int) {
@@ -149,10 +149,10 @@ class PurchaseActivity : AppCompatActivity() {
      fun repeaterSwitch(view: View?) {
          if (purchase.repeater) {
              purchase.repeater = false
-             binding.purchaseRepeat!!.background = ContextCompat.getDrawable(this, R.drawable.ic_checkbox_false)
+             binding.purchaseRepeat.background = ContextCompat.getDrawable(this, R.drawable.ic_checkbox_false)
          } else {
              purchase.repeater = true
-             binding.purchaseRepeat!!.background = ContextCompat.getDrawable(this, R.drawable.ic_checkbox_true)
+             binding.purchaseRepeat.background = ContextCompat.getDrawable(this, R.drawable.ic_checkbox_true)
          }
      }
 
@@ -183,88 +183,36 @@ class PurchaseActivity : AppCompatActivity() {
      }
 
      fun editPurchase(view: View) {
-         try {
-             val x: Float = binding.profitAmount.getText().toString().toFloat()
-             val purchaseEditable = Purchase(
-                 purchaseId,
-                 purchase.idFdb,
-                 binding.profitName.text.toString(),
-                 binding.profitDescription.text.toString(),
-                 binding.profitAmount.text.toString().toFloat(),
-                 binding.profitDate.text.toString().toFloat(),
-                 purchase.periodId,
-                 purchase.statusId,
-                 parentId,
-                 purchase.repeater,  //binding.purchaseRepeat.isChecked(),
-             )
-             if (sumOfChildrenSpending - purchaseEditable.price > 0.01) {
-                 binding.profitAmount.setText(sumOfChildrenSpending.toString())
-                 purchaseEditable.price = sumOfChildrenSpending
-                 val builder = AlertDialog.Builder(this)
-                 builder.setTitle(getString(R.string.budgetIncreased))
-                     .setMessage(getString(R.string.budgetIncreasedMessage)) //.setIcon(R.drawable.ic_launcher_cat)
-                     .setPositiveButton(
-                         getString(R.string.ok)
-                     ) { dialog, id -> // Закрываем окно
-                         dialog.cancel()
-                     }
-                 builder.show()
-             } else {
-                 /*if (newPurchase) {
-                     Purchase.insertPurchase(this, purchaseEditable)
-                 } else {
-                     Purchase.updatePurchase(this, purchaseEditable, false)
-                 }*/
-                 /* if(periodIdAtStart != purchaseEditable.getPeriodId()){
-                     Purchase.setPeriodForChildren(this,purchaseEditable.getIdFDB(), purchaseEditable.getPeriodId(), periodIdAtStart);
-                 }*/
-                 val intent: Intent
-                 if (parentId != -8L) {
-                     intent = Intent(this, PurchaseActivity::class.java)
-                     intent.putExtra("EXTRA_PURCHASE_ID", parentId)
-                     intent.putExtra("EXTRA_CLOSE_PERIOD_MODE", closePeriodMode)
-                 } else if (closePeriodMode) {
-                     intent = Intent(this, StubActivity::class.java)
-                 } else {
-                     intent = Intent(this, MainActivity::class.java)
-                 }
-                 val toast = Toast.makeText(view.context, "Данные сохранены", Toast.LENGTH_LONG)
-                 toast.show()
-                 startActivity(intent)
-             }
-         } catch (e: Exception) {
-             val toast = Toast.makeText(view.context, "editPurchase error: $e", Toast.LENGTH_SHORT)
-             toast.show()
-         }
+         val purchaseEditable = Purchase(
+             id          = purchaseId,
+             idFdb       = purchase.idFdb,
+             name        = binding.profitName.text.toString(),
+             description = binding.profitDescription.text.toString(),
+             price       = binding.profitAmount.text.toString().toFloat(),
+             count       = binding.profitDate.text.toString().toFloat(),
+             periodId    = purchase.periodId,
+             statusId    = purchase.statusId,
+             parentId    = parentId,
+             repeater    = purchase.repeater,
+         )
+         vm.setPurchase(purchaseEditable)
+         val toast = Toast.makeText(view.context, "Данные сохранены", Toast.LENGTH_LONG)
+         toast.show()
      }
 
      fun deletePurchase(view: View) {
-         if (purchase.id == 0L) {
-             goBack()
-         }
          val builder = AlertDialog.Builder(this)
          builder.setTitle("Удалить")
          builder.setMessage("Вы уверены, что хотите удалить эту покупку?")
-         //.setIcon(R.drawable.ic_launcher_cat)
          builder.setPositiveButton(
              getString(R.string.yesItIs)
          ) { dialog, id ->
              val intent: Intent
              try {
                  if (listPurchases.size < 1) {
-                     //Purchase.deletePurchase(view.context, purchase)
-                     if (parentId != -8L) {
-                         intent = Intent(view.context, PurchaseActivity::class.java)
-                         intent.putExtra("EXTRA_PURCHASE_ID", parentId)
-                         intent.putExtra("EXTRA_CLOSE_PERIOD_MODE", closePeriodMode)
-                     } else if (closePeriodMode) {
-                         intent = Intent(view.context, StubActivity::class.java)
-                     } else {
-                         intent = Intent(view.context, MainActivity::class.java)
-                     }
+                     vm.deletePurchase(purchase)
                      val toast = Toast.makeText(view.context, "Покупка удалена", Toast.LENGTH_LONG)
                      toast.show()
-                     startActivity(intent)
                  } else {
                      val toast = Toast.makeText(
                          view.context,
@@ -287,11 +235,11 @@ class PurchaseActivity : AppCompatActivity() {
          builder.show()
      }
 
-     fun createRecyclerView() {
+     private fun createRecyclerView() {
+         val recyclerView: RecyclerView = findViewById(R.id.mainPurchasesRecyclerView)
          val linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true)
          linearLayoutManager.reverseLayout = false
          linearLayoutManager.stackFromEnd = false
-         recyclerView = findViewById(R.id.mainPurchasesRecyclerView)
          recyclerView.setHasFixedSize(false)
          recyclerView.setLayoutManager(linearLayoutManager)
          adapter = PurchaseAdapter(listPurchases, this)
@@ -301,7 +249,6 @@ class PurchaseActivity : AppCompatActivity() {
                  override fun onClick(view: View, position: Long) {
                      val intent = Intent(view.context, StubActivity::class.java)
                      intent.putExtra("EXTRA_PURCHASE_ID", position)
-                     intent.putExtra("EXTRA_CLOSE_PERIOD_MODE", closePeriodMode)
                      startActivity(intent)
                  }
              }
@@ -310,9 +257,9 @@ class PurchaseActivity : AppCompatActivity() {
 
      fun addPurchase(view: View?) {
          val intent = Intent(this, PurchaseActivity::class.java)
-         intent.putExtra("EXTRA_PURCHASE_ID", "0")
+         intent.putExtra("EXTRA_PURCHASE_ID", 0) // new Purchase
          intent.putExtra("EXTRA_PARENT_ID", purchaseId)
-         intent.putExtra("EXTRA_CLOSE_PERIOD_MODE", closePeriodMode)
+         intent.putExtra("EXTRA_PERIOD_ID", period.id)
          startActivity(intent)
      }
 
@@ -340,69 +287,15 @@ class PurchaseActivity : AppCompatActivity() {
          }
      }
 
-     fun nextPeriod(view: View?) {
-         changePeriod(+1)
-     }
-
-     fun previousPeriod(view: View?) {
-         changePeriod(-1)
-     }
-
      fun buttonBack(view: View?) {
          goBack()
      }
 
-     private fun changePeriod(position: Int) {
-        /* var periodId: Int = purchase.periodId
-         if (Period.neighborIsAvailable(this, periodId, position) && purchase.parentId == -8L
-         ) {
-             purchase.periodId = (periodId + position)
-             periodId = periodId + position
-             binding.purchasePeriod.setText(Period.getPeriodName(this, periodId))
-             buttonsPeriodAvailable()
-             mMyApp.setCurrentPeriod(periodId)
-             if (periodId == mMyApp.getActualPeriod()) { //todo function
-                 binding.periodActive.setText(getString(R.string.active))
-             } else {
-                 binding.periodActive.setText(getString(R.string.notActive))
-             }
-         }*/
-     }
-
-     fun buttonsPeriodAvailable() {
-         /*
-         val previousPeriod = findViewById<View>(R.id.purchaseButtonPreviousPeriod)
-         val nextPeriod = findViewById<View>(R.id.purchaseButtonNextPeriod)
-         val periodId: Int = purchase.periodId()
-         if (purchase.parentId().equals("main")) {
-             if (Period.neighborIsAvailable(this, periodId, -1)) {
-                 previousPeriod.background =
-                     ContextCompat.getDrawable(this, R.drawable.ic_arrow_left)
-             } else {
-                 previousPeriod.background =
-                     ContextCompat.getDrawable(this, R.drawable.ic_arrow_left_off)
-             }
-             if (Period.neighborIsAvailable(this, periodId, +1)) {
-                 nextPeriod.background = ContextCompat.getDrawable(this, R.drawable.ic_arrow_right)
-             } else {
-                 nextPeriod.background =
-                     ContextCompat.getDrawable(this, R.drawable.ic_arrow_right_off)
-             }
-         } else {
-             nextPeriod.background = ContextCompat.getDrawable(this, R.drawable.ic_arrow_right_off)
-             previousPeriod.background =
-                 ContextCompat.getDrawable(this, R.drawable.ic_arrow_left_off)
-         }*/
-     }
-
      fun goBack() {
          val intent: Intent
-         if (parentId != -8L) {
+         if (parentId != 0L) {
              intent = Intent(this, PurchaseActivity::class.java)
              intent.putExtra("EXTRA_PURCHASE_ID", parentId)
-             intent.putExtra("EXTRA_CLOSE_PERIOD_MODE", closePeriodMode)
-         } else if (closePeriodMode) {
-             intent = Intent(this, StubActivity::class.java)
          } else {
              intent = Intent(this, MainActivity::class.java)
          }

@@ -37,6 +37,12 @@ class PurchaseRepoImpl (private val purchaseDao: PurchaseDao,
         return resultList
     }
 
+    override suspend fun insertPurchase(purchase: Purchase) {
+        withContext(defaultDispatcher) {
+            purchaseDao.insertAll(purchaseToPurchaseD(purchase))
+        }
+    }
+
     override suspend fun insertTestPurchase(){
         for ( i in 1..8){
             try{

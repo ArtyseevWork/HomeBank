@@ -10,7 +10,6 @@ interface PurchaseDao {
     /*@Query("SELECT * FROM purchase WHERE :query")
     suspend fun getPurchasesByQuery(query: String): Array<PurchaseD>*/
 
-
     @Query("SELECT * FROM purchase where statusId < 400")
     suspend fun getAllActivePurchases(): Array<PurchaseD>
 

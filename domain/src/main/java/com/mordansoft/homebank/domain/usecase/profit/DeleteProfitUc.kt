@@ -8,6 +8,9 @@ import com.mordansoft.homebank.domain.repo.PurchaseRepo
 class DeleteProfitUc(private val profitRepo: ProfitRepo) {
 
     suspend fun execute(profit: Profit){
-        //todo
+        if (profit.id != 0L){
+            profit.statusId = 400
+            profitRepo.updateProfit(profit)
+        }
     }
 }

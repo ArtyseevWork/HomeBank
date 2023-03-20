@@ -43,7 +43,7 @@ class ProfitViewModel(private val getProfitByIdUc       : GetProfitByIdUc,
         }
     }
 
-    fun getPeriod(periodId : Int?){ // todo delete arguments
+    fun getPeriod(periodId : Int?){
         viewModelScope.launch {
             _period.value      = getPeriodUc.execute(periodId)
         }

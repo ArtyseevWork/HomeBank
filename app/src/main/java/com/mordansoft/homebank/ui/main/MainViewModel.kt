@@ -34,13 +34,7 @@ class MainViewModel(private val getMainPurchasesUc      : GetMainPurchasesUc,
         }
     }
 
-    /*fun getAccounting(periodId : Int){ // todo delete arguments
-        viewModelScope.launch {
-            _accounting.value = getPeriodAccountingUc.execute(periodId)
-        }
-    }*/
-
-    fun getPeriodsData(periodId : Int?){ // todo delete arguments
+    fun getPeriodsData(periodId : Int?){
         viewModelScope.launch {
             val newPeriod : Period = getPeriodUc.execute(periodId)
             _period.value      = newPeriod

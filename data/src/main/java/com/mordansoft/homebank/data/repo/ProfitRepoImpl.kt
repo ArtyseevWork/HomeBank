@@ -38,6 +38,10 @@ class ProfitRepoImpl (private val profitDao: ProfitDao,
         }
     }
 
+    override suspend fun insertProfit(profit: Profit) {
+        profitDao.insertAll(profitToProfitD(profit))
+    }
+
     /*********** mappers  ************/
     private fun profitToProfitD(profit: Profit): ProfitD {
         return ProfitD(

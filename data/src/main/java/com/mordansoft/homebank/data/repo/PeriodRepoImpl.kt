@@ -36,7 +36,7 @@ class PeriodRepoImpl (private val periodDao: PeriodDao,
             }
         }*/
 
-            val count = 100 //Сколько периодов добавить
+            val count = 10 //Сколько периодов добавить
             val cal: Calendar = GregorianCalendar(2023, 0, 1) // Даты первого периода
             var startMonth: Long
             var endMonth: Long

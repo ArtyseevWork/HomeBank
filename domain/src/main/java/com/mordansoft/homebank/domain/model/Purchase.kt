@@ -2,8 +2,8 @@ package com.mordansoft.homebank.domain.model
 
 data class Purchase(
 
-    var id: Long = -8,
-    var idFdb: Long,
+    var id: Long = 0,
+    var idFdb: Long = 0,
     var name: String = "New Purchase",
     var description: String = "Your description",
     var price: Float = 100f,

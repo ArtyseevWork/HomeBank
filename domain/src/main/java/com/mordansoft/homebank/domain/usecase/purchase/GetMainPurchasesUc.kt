@@ -7,7 +7,7 @@ class GetMainPurchasesUc(val purchaseRepo: PurchaseRepo) {
 
     suspend fun execute(periodId : Int, statusId : Int = 0 ): ArrayList<Purchase> {
         purchaseRepo.insertTestPurchase()
-        val parentId : Long = -8 //todo create constant
+        val parentId : Long = 0 //todo create constant
 
         if (statusId == 0 ) {
             return purchaseRepo.getMainPurchases(

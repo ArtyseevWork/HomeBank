@@ -14,7 +14,7 @@ class GetProfitsAccountingUc( private val profitRepo: ProfitRepo) {
 
         var periodProfits = profitRepo.getMainProfits(periodId = periodId)
 
-        for (profit in  periodProfits){ //todo refactor to when
+        for (profit in  periodProfits){
             if (profit.statusId < Status.REMOVED ) {
                 capitalPlan += profit.amount
                 if (profit.statusId == Status.RECEIVED) {

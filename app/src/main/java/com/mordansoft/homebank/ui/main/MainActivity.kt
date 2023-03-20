@@ -88,8 +88,8 @@ class MainActivity : AppCompatActivity() {
         val v_plan_balance = findViewById<TextView>(R.id.activity_main__plan_balance)
         val v_fact_balance = findViewById<TextView>(R.id.activity_main__fact_balance)
 
-        v_plan_budget.text = String.format("%.0f",  periodAccounting.balancePlan)
-        v_fact_budget.text = String.format("%.0f",  periodAccounting.balanceFact)
+        v_plan_budget.text = String.format("%.0f",  periodAccounting.capitalPlan)
+        v_fact_budget.text = String.format("%.0f",  periodAccounting.capitalFact)
         v_plan_spent.text = String.format("%.0f",   periodAccounting.expencesPlan)
         v_fact_spent.text = String.format("%.0f",   periodAccounting.expencesFact)
         v_plan_balance.text = String.format("%.0f", periodAccounting.balancePlan)
@@ -336,8 +336,9 @@ class MainActivity : AppCompatActivity() {
     /******* Buttons  */
     fun addPurchase(view: View?) {
         val intent = Intent(this@MainActivity, PurchaseActivity::class.java)
-        intent.putExtra("EXTRA_PURCHASE_ID", "0")
-        intent.putExtra("EXTRA_PARENT_ID", "-8")
+        intent.putExtra("EXTRA_PURCHASE_ID", 0)
+        intent.putExtra("EXTRA_PARENT_ID", 0)
+        intent.putExtra("EXTRA_PERIOD_ID", period.id)
         startActivity(intent)
     }
 

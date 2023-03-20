@@ -30,7 +30,7 @@ class ProfitsViewModel(private val getMainProfitsUc       : GetMainProfitsUc,
 
 
 
-    fun getPeriodsData(periodId : Int?){ // todo delete arguments
+    fun getPeriodsData(periodId : Int?){
         viewModelScope.launch {
             val newPeriod : Period = getPeriodUc.execute(periodId)
             _period.value      = newPeriod
