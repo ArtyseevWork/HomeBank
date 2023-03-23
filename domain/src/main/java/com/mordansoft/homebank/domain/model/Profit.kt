@@ -16,8 +16,8 @@ data class Profit(
         const val DEFAULT_NAME       : String = "New Profit"
         const val DEFAULT_DESCRIPTION: String = "Your Description"
         const val DEFAULT_AMOUNT     : Float = 0f
-        const val DEFAULT_PERIOD_ID  : Int = -8
-        const val DEFAULT_STATUS_ID  : Int = -8
+        const val DEFAULT_PERIOD_ID  : Int = 1
+        const val DEFAULT_STATUS_ID  : Int = 100
         const val DEFAULT_DATE       : Long = 0L
         const val DEFAULT_TIMESTAMP  : Long = 0L
         const val DEFAULT_REPEATER   : Boolean = false
