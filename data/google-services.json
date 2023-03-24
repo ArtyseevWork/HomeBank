@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:461092284362:android:037136f7fb23359ff79133",
         "android_client_info": {
-          "package_name": "com.mordansoft.homebank"
+          "package_name": "com.mordansoft.homebank.data"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "461092284362-ieuqau2d04k3evp20j0su669e18rva1q.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.mordansoft.homebank",
+            "package_name": "com.mordansoft.homebank.data",
             "certificate_hash": "6abfd75e3cf83550c74440538a6a12e959586387"
           }
         },

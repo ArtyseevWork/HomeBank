@@ -24,6 +24,7 @@ import com.mordansoft.homebank.domain.model.Period
 import com.mordansoft.homebank.domain.model.PeriodAccounting
 import com.mordansoft.homebank.domain.model.Purchase
 import com.mordansoft.homebank.ui.StubActivity
+import com.mordansoft.homebank.ui.auth.ui.login.GoogleLoginTest
 import com.mordansoft.homebank.ui.exchange_rates.ExchangeRatesActivity
 import com.mordansoft.homebank.ui.profit.ProfitActivity
 import com.mordansoft.homebank.ui.profits.ProfitAdapter
@@ -225,7 +226,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     Toast.LENGTH_SHORT
                 ).show()
             }*/
-                intent = Intent(this, StubActivity::class.java)
+                intent = Intent(this, GoogleLoginTest::class.java)
                 startActivity(intent)
             }
             R.id.test2 -> {/*try {
