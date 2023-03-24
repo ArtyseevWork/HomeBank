@@ -1,10 +1,12 @@
 package com.mordansoft.homebank.di
 
 import android.content.Context
+import com.mordansoft.homebank.domain.usecase.exchange_rates.GetExchangeRatesUc
 import com.mordansoft.homebank.domain.usecase.period.GetPeriodAccountingUc
 import com.mordansoft.homebank.domain.usecase.period.GetPeriodUc
 import com.mordansoft.homebank.domain.usecase.profit.*
 import com.mordansoft.homebank.domain.usecase.purchase.*
+import com.mordansoft.homebank.ui.exchange_rates.ExchangeRatesViewModelFactory
 import com.mordansoft.homebank.ui.main.MainViewModelFactory
 import com.mordansoft.homebank.ui.profit.ProfitViewModelFactory
 import com.mordansoft.homebank.ui.profits.ProfitsViewModelFactory
@@ -59,6 +61,12 @@ class AppModule(val context: Context) {
                                         deletePurchaseUc,
                                         getPeriodUc
         )
+    }
+
+    @Provides
+    fun provideExchangeRatesViewModelFactory(getExchangeRatesUc : GetExchangeRatesUc)
+            : ExchangeRatesViewModelFactory {
+        return ExchangeRatesViewModelFactory(getExchangeRatesUc)
     }
 
 

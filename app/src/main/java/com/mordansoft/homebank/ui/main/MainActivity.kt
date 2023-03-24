@@ -9,6 +9,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import androidx.core.view.GravityCompat
 import androidx.customview.widget.ViewDragHelper
 import androidx.drawerlayout.widget.DrawerLayout
@@ -23,11 +24,14 @@ import com.mordansoft.homebank.domain.model.Period
 import com.mordansoft.homebank.domain.model.PeriodAccounting
 import com.mordansoft.homebank.domain.model.Purchase
 import com.mordansoft.homebank.ui.StubActivity
+import com.mordansoft.homebank.ui.exchange_rates.ExchangeRatesActivity
+import com.mordansoft.homebank.ui.profit.ProfitActivity
+import com.mordansoft.homebank.ui.profits.ProfitAdapter
 import com.mordansoft.homebank.ui.profits.ProfitsActivity
 import com.mordansoft.homebank.ui.purchase.PurchaseActivity
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private var listPurchases: ArrayList<Purchase> = ArrayList()
     private lateinit var recyclerView: RecyclerView
@@ -57,7 +61,7 @@ class MainActivity : AppCompatActivity() {
         /******** left menu  *********/
         val drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
         val navigationView = findViewById<NavigationView>(R.id.nav_view)
-        //navigationView.setNavigationItemSelectedListener(this)
+        navigationView.setNavigationItemSelectedListener(this)
         try {
             val mDragger = drawer.javaClass.getDeclaredField(
                 "mLeftDragger"
@@ -150,7 +154,8 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    fun onNavigationItemSelected(item: MenuItem): Boolean { //buttons of left menu
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean { //buttons of left menu
         val id = item.itemId
         val intent: Intent
         when (id) {
@@ -231,7 +236,7 @@ class MainActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
             }*/
-                intent = Intent(this, StubActivity::class.java)
+                intent = Intent(this, ExchangeRatesActivity::class.java)
                 startActivity(intent)
             }
             R.id.menuAuthExit -> {

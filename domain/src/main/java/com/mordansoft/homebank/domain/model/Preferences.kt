@@ -1,10 +1,12 @@
 package com.mordansoft.homebank.domain.model
 
 data class Preferences(
-    var activePeriod: Int     = DEFAULT_ACTIVE_PERIOD,
-    var timestamp   : Long    = DEFAULT_TIMESTAMP    ,
-    var profitsMode : Int     = DEFAULT_PROFITS_MODE ,
-    var onlineMode  : Boolean = DEFAULT_ONLINE_MODE  )
+    var activePeriod   : Int      = DEFAULT_ACTIVE_PERIOD,
+    var timestamp      : Long     = DEFAULT_TIMESTAMP    ,
+    var profitsMode    : Int      = DEFAULT_PROFITS_MODE ,
+    var onlineMode     : Boolean  = DEFAULT_ONLINE_MODE  ,
+    val mainCurrencyId : Int      = Currency.UAH_ISO_4217
+)
 {
     companion object{
         const val DEFAULT_ACTIVE_PERIOD: Int     = 1

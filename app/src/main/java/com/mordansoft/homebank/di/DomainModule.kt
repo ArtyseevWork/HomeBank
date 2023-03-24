@@ -1,9 +1,7 @@
 package com.mordansoft.homebank.di
 
-import com.mordansoft.homebank.domain.repo.PeriodRepo
-import com.mordansoft.homebank.domain.repo.PreferencesRepo
-import com.mordansoft.homebank.domain.repo.ProfitRepo
-import com.mordansoft.homebank.domain.repo.PurchaseRepo
+import com.mordansoft.homebank.domain.repo.*
+import com.mordansoft.homebank.domain.usecase.exchange_rates.GetExchangeRatesUc
 import com.mordansoft.homebank.domain.usecase.period.GetPeriodAccountingUc
 import com.mordansoft.homebank.domain.usecase.period.GetPeriodUc
 import com.mordansoft.homebank.domain.usecase.profit.*
@@ -79,6 +77,13 @@ class DomainModule {
                            preferencesRepo: PreferencesRepo) : GetPeriodUc {
         return GetPeriodUc(periodRepo      = periodRepo,
                            preferencesRepo = preferencesRepo)
+    }
+
+    @Provides
+    fun provideGetExchangeRatesUc(exchangeRepo: ExchangeRepo,
+                                  preferencesRepo: PreferencesRepo) : GetExchangeRatesUc {
+        return GetExchangeRatesUc(exchangeRepo    = exchangeRepo,
+                                  preferencesRepo = preferencesRepo)
     }
 
 
