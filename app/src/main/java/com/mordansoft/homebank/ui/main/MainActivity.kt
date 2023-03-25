@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
 import com.mordansoft.homebank.R
 import com.mordansoft.homebank.app.App
 import com.mordansoft.homebank.domain.model.Period
@@ -241,6 +242,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 startActivity(intent)
             }
             R.id.menuAuthExit -> {
+                getUserId()
+
+                Toast.makeText(
+                    baseContext, getUserId(),
+                    Toast.LENGTH_SHORT
+                ).show()
                 /*val builder3 = AlertDialog.Builder(this)
                 builder3.setTitle(getString(R.string.exit))
                 builder3.setMessage(getString(R.string.exitMessage))
@@ -271,6 +278,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
         drawer.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    fun getUserId(): String? {
+        return try {
+            val mAuth = FirebaseAuth.getInstance()
+            val user = mAuth.currentUser
+            //assert user != null;
+            user!!.uid
+        } catch (e: Exception) {
+            null
+        }
     }
 
     fun menuButton(view: View?) {

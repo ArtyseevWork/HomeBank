@@ -1,10 +1,12 @@
 package com.mordansoft.homebank.ui.auth.ui.login
 
+import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import com.example.googleloginlogout.SavedPreference
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -40,27 +42,24 @@ class GoogleLoginTest: AppCompatActivity() {
             Toast.makeText(this,"Logging In", Toast.LENGTH_SHORT).show()
             signInGoogle()
         }
-
     }
 
     private  fun signInGoogle(){
-
-        val signInIntent: Intent =mGoogleSignInClient.signInIntent
-        startActivityForResult(signInIntent,Req_Code)
+        val signInIntent: Intent = mGoogleSignInClient.signInIntent
+        resultLauncher.launch(signInIntent)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode==Req_Code){
+    var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data: Intent? = result.data
             val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
             handleResult(task)
-            //firebaseAuthWithGoogle(account!!)
         }
     }
 
     private fun handleResult(completedTask: Task<GoogleSignInAccount>){
         try {
-            val account: GoogleSignInAccount? =completedTask.getResult(ApiException::class.java)
+            val account: GoogleSignInAccount? = completedTask.getResult(ApiException::class.java)
             if (account != null) {
                 UpdateUI(account)
             }
