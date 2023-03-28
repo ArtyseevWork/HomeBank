@@ -4,12 +4,15 @@ package com.mordansoft.homebank.data.repo
 import androidx.annotation.WorkerThread
 import com.mordansoft.homebank.data.model.PurchaseD
 import com.mordansoft.homebank.data.storage.PurchaseDao
+import com.mordansoft.homebank.data.storage.firebase.FdbStorageImpl
 import com.mordansoft.homebank.domain.model.Purchase
 import com.mordansoft.homebank.domain.repo.PurchaseRepo
 import kotlinx.coroutines.*
 
-class PurchaseRepoImpl (private val purchaseDao: PurchaseDao,
-                        private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default) : PurchaseRepo {
+class PurchaseRepoImpl (private val purchaseDao      : PurchaseDao,
+                        private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default)
+    : PurchaseRepo {
+
 
     override suspend fun updatePurchase(purchase: Purchase) {
         return purchaseDao.updatePurchase(purchaseToPurchaseD(purchase))
@@ -65,6 +68,10 @@ class PurchaseRepoImpl (private val purchaseDao: PurchaseDao,
                                                                                statusId = statusId))
         }
         return resultList
+    }
+
+    override suspend fun updateRemotePurchase(purchase: Purchase) {
+        FdbStorageImpl.updatePurchase(purchaseToPurchaseD(purchase))
     }
 
     /*********** mappers  ************/

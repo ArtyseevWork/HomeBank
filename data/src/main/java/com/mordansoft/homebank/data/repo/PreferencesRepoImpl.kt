@@ -2,6 +2,7 @@ package com.mordansoft.homebank.data.repo
 
 import com.mordansoft.homebank.data.model.PreferencesD
 import com.mordansoft.homebank.data.storage.PreferencesStorageImplSnPr
+import com.mordansoft.homebank.data.storage.firebase.FdbStorageImpl
 import com.mordansoft.homebank.domain.model.Preferences
 import com.mordansoft.homebank.domain.repo.PreferencesRepo
 
@@ -17,6 +18,10 @@ class PreferencesRepoImpl (private val preferencesStorageImplSnPr: PreferencesSt
 
     override suspend fun getPreferences(): Preferences {
         return preferencesDToPreferences(preferencesStorageImplSnPr.getPreferences())
+    }
+
+    override suspend fun updateRemotePreferences(preferences: Preferences) {
+        FdbStorageImpl.updatePreferences(preferencesToPreferencesD(preferences))
     }
 
     /*********** mappers  ************/

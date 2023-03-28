@@ -8,4 +8,5 @@ interface ProfitRepo {
     suspend fun getMainProfits(periodId : Int): ArrayList<Profit>
     suspend fun insertProfit(profit: Profit)
     suspend fun insertTestProfit(){    }
+    suspend fun updateRemoteProfit(profit: Profit)
 }

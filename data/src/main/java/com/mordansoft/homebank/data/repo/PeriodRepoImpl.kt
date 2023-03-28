@@ -1,9 +1,9 @@
 package com.mordansoft.homebank.data.repo
 
 
-import android.database.sqlite.SQLiteDatabase
 import com.mordansoft.homebank.data.model.PeriodD
 import com.mordansoft.homebank.data.storage.PeriodDao
+import com.mordansoft.homebank.data.storage.firebase.FdbStorageImpl
 import com.mordansoft.homebank.domain.model.Period
 import com.mordansoft.homebank.domain.repo.PeriodRepo
 import kotlinx.coroutines.*
@@ -82,6 +82,7 @@ class PeriodRepoImpl (private val periodDao: PeriodDao,
                 )
                 try{
                     periodDao.insertAll(periodD)
+                    FdbStorageImpl.updatePeriod(periodD)
                 } catch (e: Exception){
                     println("$i - id already exist")
                 }
@@ -91,6 +92,9 @@ class PeriodRepoImpl (private val periodDao: PeriodDao,
 
     }
 
+    override suspend fun updateRemotePeriod(period: Period) {
+        FdbStorageImpl.updatePeriod(periodToPeriodD(period))
+    }
 
     /*********** mappers  ************/
     private fun periodToPeriodD(period: Period): PeriodD {

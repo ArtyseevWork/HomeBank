@@ -10,4 +10,5 @@ interface PurchaseRepo {
     suspend fun getMainPurchases(parentId : Long, periodId : Int, statusId : Int): ArrayList<Purchase>
     suspend fun insertPurchase(purchase: Purchase)
     suspend fun insertTestPurchase(){    }
+    suspend fun updateRemotePurchase(purchase: Purchase)
 }

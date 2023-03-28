@@ -9,6 +9,7 @@ class DeletePurchaseUc(private val purchaseRepo: PurchaseRepo) {
         if (purchase.id != Purchase.DEFAULT_ID){ // not new purchase
             purchase.statusId = Purchase.STATUS_REMOVED
             purchaseRepo.updatePurchase(purchase)
+            purchaseRepo.updateRemotePurchase(purchase)
         }
     }
 }

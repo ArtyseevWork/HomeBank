@@ -9,6 +9,7 @@ class DeleteProfitUc(private val profitRepo: ProfitRepo) {
         if (profit.id != Profit.DEFAULT_ID){ //not new Profit
             profit.statusId = Profit.STATUS_REMOVED
             profitRepo.updateProfit(profit)
+            profitRepo.updateRemoteProfit(profit)
         }
     }
 }

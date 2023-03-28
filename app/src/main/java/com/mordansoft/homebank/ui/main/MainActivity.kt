@@ -1,5 +1,7 @@
 package com.mordansoft.homebank.ui.main
 
+import android.app.ActivityManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
@@ -21,6 +23,8 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.mordansoft.homebank.R
 import com.mordansoft.homebank.app.App
+import com.mordansoft.homebank.data.storage.firebase.FdbStorageImpl
+import com.mordansoft.homebank.data.synchronizeservise.SyncService
 import com.mordansoft.homebank.domain.model.Period
 import com.mordansoft.homebank.domain.model.PeriodAccounting
 import com.mordansoft.homebank.domain.model.Purchase
@@ -209,7 +213,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 /*intent = Intent(this, RecycleBinActivity::class.java)
                 startActivity(intent)*/
 
-                intent = Intent(this, StubActivity::class.java)
+                intent = Intent(this, GoogleLoginTest::class.java)
                 startActivity(intent)
             }
             R.id.menuProperties -> {
@@ -227,8 +231,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     Toast.LENGTH_SHORT
                 ).show()
             }*/
-                intent = Intent(this, GoogleLoginTest::class.java)
-                startActivity(intent)
+
+                val serviceClass = SyncService::class.java
+                val intent = Intent(this, serviceClass)
+                startService(intent)
+
+
             }
             R.id.test2 -> {/*try {
                 Purchase.syncAllPurchases(this)
@@ -242,10 +250,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 startActivity(intent)
             }
             R.id.menuAuthExit -> {
-                getUserId()
+                FdbStorageImpl.getUserId()
 
                 Toast.makeText(
-                    baseContext, getUserId(),
+                    baseContext, FdbStorageImpl.getUserId(),
                     Toast.LENGTH_SHORT
                 ).show()
                 /*val builder3 = AlertDialog.Builder(this)
@@ -271,8 +279,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 ) { dialog, id -> dialog.cancel() }
                 builder3.show()
                 return true*/
-                intent = Intent(this, StubActivity::class.java)
-                startActivity(intent)
+                /*intent = Intent(this, StubActivity::class.java)
+                startActivity(intent)*/
             }
         }
         val drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
@@ -280,16 +288,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
-    fun getUserId(): String? {
-        return try {
-            val mAuth = FirebaseAuth.getInstance()
-            val user = mAuth.currentUser
-            //assert user != null;
-            user!!.uid
-        } catch (e: Exception) {
-            null
+    /*private fun isServiceRunning(serviceClass: Class<*>): Boolean {
+        val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+
+        // Loop through the running services
+        for (service in activityManager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.name == service.service.className) {
+                // If the service is running then return true
+                return true
+            }
         }
-    }
+        return false
+    }*/
+
+
 
     fun menuButton(view: View?) {
         //Period.closePeriod(this);

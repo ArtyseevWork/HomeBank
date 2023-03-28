@@ -19,7 +19,7 @@
             <item
                 android:id="@+id/menuAuth"
                 android:icon="@android:drawable/ic_menu_help"
-                android:title="Корзина"/>
+                android:title="Авторизация"/>
             <item
                 android:id="@+id/menuAuthExit"
                 android:icon="@android:drawable/ic_menu_help"

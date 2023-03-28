@@ -14,7 +14,7 @@ class SetPurchaseUc(private val purchaseRepo: PurchaseRepo) {
             purchase.id = timestamp
             purchaseRepo.insertPurchase(purchase)
         }
-
+        purchaseRepo.updateRemotePurchase(purchase)
     }
 
 

@@ -1,9 +1,8 @@
 package com.mordansoft.homebank.data.repo
 
-
-import androidx.annotation.WorkerThread
 import com.mordansoft.homebank.data.model.ProfitD
 import com.mordansoft.homebank.data.storage.ProfitDao
+import com.mordansoft.homebank.data.storage.firebase.FdbStorageImpl
 import com.mordansoft.homebank.domain.model.Profit
 import com.mordansoft.homebank.domain.repo.ProfitRepo
 import kotlinx.coroutines.*
@@ -12,7 +11,8 @@ class ProfitRepoImpl (private val profitDao: ProfitDao,
                       private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default) : ProfitRepo {
 
     override suspend fun updateProfit(profit: Profit) {
-        return profitDao.updateProfit(profitToProfitD(profit))
+        profitDao.updateProfit(profitToProfitD(profit))
+
     }
 
     override suspend fun getMainProfits(periodId: Int): ArrayList<Profit> {
@@ -40,7 +40,15 @@ class ProfitRepoImpl (private val profitDao: ProfitDao,
 
     override suspend fun insertProfit(profit: Profit) {
         profitDao.insertAll(profitToProfitD(profit))
+        updateRemoteProfit(profit)
+
     }
+
+
+    override suspend fun updateRemoteProfit(profit: Profit) {
+        FdbStorageImpl.updateProfit(profitToProfitD(profit))
+    }
+
 
     /*********** mappers  ************/
     private fun profitToProfitD(profit: Profit): ProfitD {

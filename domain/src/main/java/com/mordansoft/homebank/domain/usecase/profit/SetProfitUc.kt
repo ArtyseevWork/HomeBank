@@ -6,7 +6,7 @@ import com.mordansoft.homebank.domain.repo.ProfitRepo
 class SetProfitUc(private val profitRepo: ProfitRepo) {
 
     suspend fun execute(profit: Profit){
-        var timestamp: Long = System.currentTimeMillis()
+        val timestamp: Long = System.currentTimeMillis()
         profit.timestamp = timestamp
         if (profit.id != Profit.DEFAULT_ID){ // not new profit
             profitRepo.updateProfit(profit)
@@ -14,6 +14,7 @@ class SetProfitUc(private val profitRepo: ProfitRepo) {
             profit.id = timestamp
             profitRepo.insertProfit(profit)
         }
+        profitRepo.updateRemoteProfit(profit)
     }
 
 
