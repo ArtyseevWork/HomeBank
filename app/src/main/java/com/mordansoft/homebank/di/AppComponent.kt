@@ -1,4 +1,5 @@
 package com.mordansoft.homebank.di
+import com.mordansoft.homebank.data.synchronizeservise.SyncService
 import com.mordansoft.homebank.ui.exchange_rates.ExchangeRatesActivity
 import com.mordansoft.homebank.ui.main.MainActivity
 import com.mordansoft.homebank.ui.profit.ProfitActivity
@@ -14,4 +15,5 @@ interface AppComponent  {
     fun inject(profitsActivity: ProfitsActivity)
     fun inject(profitActivity: ProfitActivity)
     fun inject(exchangeRatesActivity: ExchangeRatesActivity)
+    //fun inject(syncService: SyncService)
 }

@@ -2,12 +2,19 @@ package com.mordansoft.homebank.data.repo
 
 
 import com.mordansoft.homebank.data.model.PeriodD
+import com.mordansoft.homebank.data.model.PeriodD.*
+import com.mordansoft.homebank.data.model.PeriodD.Companion.periodDToPeriod
+import com.mordansoft.homebank.data.model.PeriodD.Companion.periodDToPeriodArray
+import com.mordansoft.homebank.data.model.PeriodD.Companion.periodToPeriodD
 import com.mordansoft.homebank.data.storage.PeriodDao
 import com.mordansoft.homebank.data.storage.firebase.FdbStorageImpl
+import com.mordansoft.homebank.data.storage.firebase.FdbStorageImpl.getReference
+import com.mordansoft.homebank.data.storage.firebase.FdbStorageImpl.getUserId
 import com.mordansoft.homebank.domain.model.Period
 import com.mordansoft.homebank.domain.repo.PeriodRepo
 import kotlinx.coroutines.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 class PeriodRepoImpl (private val periodDao: PeriodDao,
                       private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default) : PeriodRepo {
@@ -23,19 +30,19 @@ class PeriodRepoImpl (private val periodDao: PeriodDao,
     override suspend fun getPeriodById(periodId: Int): Period {
         insertTestPeriod()
         val periodD: PeriodD = periodDao.getPeriodById(periodId)
-        val periodId2 = periodId
         return periodDToPeriod(periodD);
     }
 
-    override suspend fun insertTestPeriod(){
-       /* for ( i in 1..10){
-            try{
-                periodDao.insertAll(PeriodD(id = i))
-            } catch (e: Exception){
-                println("$i - id already exist")
-            }
-        }*/
+    override suspend fun getAllPeriods(): ArrayList<Period> {
+        return periodDToPeriodArray(periodDao.getAllPeriods())
+    }
 
+    override suspend fun getAllId(): Array<Int> {
+        return periodDao.getAllId()
+    }
+
+    override suspend fun insertTestPeriod(){
+/*
             val count = 10 //Сколько периодов добавить
             val cal: Calendar = GregorianCalendar(2023, 0, 1) // Даты первого периода
             var startMonth: Long
@@ -82,53 +89,26 @@ class PeriodRepoImpl (private val periodDao: PeriodDao,
                 )
                 try{
                     periodDao.insertAll(periodD)
-                    FdbStorageImpl.updatePeriod(periodD)
+                    //FdbStorageImpl.updatePeriod(periodD) //todo
                 } catch (e: Exception){
                     println("$i - id already exist")
                 }
                 cal.add(Calendar.SECOND, -86399) //reset to 12:00AM (00:00)
                 cal.add(Calendar.MONTH, 1)
             }
-
+*/
     }
 
     override suspend fun updateRemotePeriod(period: Period) {
-        FdbStorageImpl.updatePeriod(periodToPeriodD(period))
-    }
-
-    /*********** mappers  ************/
-    private fun periodToPeriodD(period: Period): PeriodD {
-        return PeriodD(
-            id          = period.id      ,
-            name        = period.name    ,
-            statusId    = period.statusId,
-            dateFrom    = period.dateFrom,
-            dateTo      = period.dateTo
-        )
-    }
-
-    private fun periodDToPeriod(periodD: PeriodD?): Period {
-
-        if (periodD == null){
-            return Period()
-        } else {
-            return Period(
-                id       = periodD.id,
-                name     = periodD.name,
-                statusId = periodD.statusId,
-                dateFrom = periodD.dateFrom,
-                dateTo   = periodD.dateTo
-            )
+        val userId : String? =  getUserId()
+        if (userId != null){
+            val dbPeriodReference =  getReference(FdbStorageImpl.Folders.Period)
+            dbPeriodReference
+                .child(period.id.toString())
+                .setValue(periodToPeriodD(period))
         }
     }
 
-    private fun periodDToPeriodArray(arrayPeriodsD: Array<PeriodD>): ArrayList<Period> {
-        val periods = ArrayList<Period>()
-        for (e in arrayPeriodsD) {
-            periods.add(periodDToPeriod(e))
-        }
-        return periods
-    }
-    /********* ! mappers  ************/
+
 
 }

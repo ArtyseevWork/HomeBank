@@ -3,10 +3,8 @@ package com.mordansoft.homebank.data.synchronizeservise
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.os.Handler
 import android.os.IBinder
 import android.widget.Toast
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.mordansoft.homebank.data.repo.PeriodRepoImpl
 import com.mordansoft.homebank.data.repo.PreferencesRepoImpl
@@ -15,11 +13,15 @@ import com.mordansoft.homebank.data.repo.PurchaseRepoImpl
 import com.mordansoft.homebank.data.storage.AppDatabase
 import com.mordansoft.homebank.data.storage.PreferencesStorageImplSnPr
 import com.mordansoft.homebank.data.storage.firebase.*
+import com.mordansoft.homebank.data.storage.firebase.FdbStorageImpl.getUserId
+import com.mordansoft.homebank.domain.usecase.auth.StartSyncUc
 import com.mordansoft.homebank.domain.usecase.period.PeriodSyncUc
 import com.mordansoft.homebank.domain.usecase.preferences.PreferencesSyncUc
 import com.mordansoft.homebank.domain.usecase.profit.ProfitSyncUc
 import com.mordansoft.homebank.domain.usecase.purchase.PurchaseSyncUc
-
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 class SyncService : Service() {
@@ -49,26 +51,41 @@ class SyncService : Service() {
     private val periodRepo = PeriodRepoImpl(periodDao)
     private val periodSyncUc : PeriodSyncUc = PeriodSyncUc(periodRepo)
 
+    private  val startSyncUc = StartSyncUc(
+        periodRepo = periodRepo,
+        preferencesRepo = preferencesRepo,
+        purchaseRepo = purchaseRepo,
+        profitRepo = profitRepo,
+        remoteRepo = FdbStorageImpl)
+
     override fun onBind(intent: Intent): IBinder? {
         throw UnsupportedOperationException("Not yet implemented")
     }
 
+    override fun onCreate() {
+        super.onCreate()
+
+    }
+
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         toast("service started")
-        val userId =  FdbStorageImpl.getUserId()
-            if (userId != null){
-                profitQuery = FdbStorageImpl.getReference(FdbStorageImpl.Folders.Profit)
-                profitQuery.addChildEventListener(ChildProfitListener(profitSyncUc))
+        val userId =  getUserId()
+        if (userId != null){
 
-                purchaseQuery = FdbStorageImpl.getReference(FdbStorageImpl.Folders.Purchase)
-                purchaseQuery.addChildEventListener(ChildPurchaseListener(purchaseSyncUc))
+            startSyncUc.start()
 
-                periodQuery = FdbStorageImpl.getReference(FdbStorageImpl.Folders.Period)
-                periodQuery.addChildEventListener(ChildPeriodListener(periodSyncUc))
+            profitQuery = FdbStorageImpl.getReference(FdbStorageImpl.Folders.Profit)
+            profitQuery.addChildEventListener(ChildProfitListener(profitSyncUc))
 
-                preferencesQuery = FdbStorageImpl.getReference(FdbStorageImpl.Folders.Preferences)
-                preferencesQuery.addChildEventListener(ChildPreferencesListener(preferencesSyncUc))
-            }
+            purchaseQuery = FdbStorageImpl.getReference(FdbStorageImpl.Folders.Purchase)
+            purchaseQuery.addChildEventListener(ChildPurchaseListener(purchaseSyncUc))
+
+            periodQuery = FdbStorageImpl.getReference(FdbStorageImpl.Folders.Period)
+            periodQuery.addChildEventListener(ChildPeriodListener(periodSyncUc))
+
+            preferencesQuery = FdbStorageImpl.getReference(FdbStorageImpl.Folders.Preferences)
+            preferencesQuery.addValueEventListener(ChildPreferencesListener(preferencesSyncUc))
+        }
         
         return START_STICKY
     }

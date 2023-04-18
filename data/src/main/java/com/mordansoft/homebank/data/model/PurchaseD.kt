@@ -17,4 +17,46 @@ data class PurchaseD(
     val statusId: Int       = Purchase.DEFAULT_STATUS_ID  ,
     val parentId: Long      = Purchase.DEFAULT_PARENT_ID  ,
     val repeater: Boolean   = Purchase.DEFAULT_REPEATER   ,
-    val timestamp: Long     = Purchase.DEFAULT_TIMESTAMP  )
+    val timestamp: Long     = Purchase.DEFAULT_TIMESTAMP  ){
+    companion object{
+        /*********** mappers  ************/
+        fun purchaseToPurchaseD(purchase: Purchase): PurchaseD {
+            return PurchaseD(
+                id          = purchase.id,
+                name        = purchase.name,
+                description = purchase.description,
+                price       = purchase.price,
+                count       = purchase.count,
+                periodId    = purchase.periodId,
+                statusId    = purchase.statusId,
+                parentId    = purchase.parentId,
+                repeater    = purchase.repeater,
+                timestamp   = purchase.timestamp
+            )
+        }
+
+        fun purchaseDToPurchase(purchaseD: PurchaseD): Purchase {
+            return Purchase(
+                id          = purchaseD.id,
+                name        = purchaseD.name,
+                description = purchaseD.description,
+                price       = purchaseD.price,
+                count       = purchaseD.count,
+                periodId    = purchaseD.periodId,
+                statusId    = purchaseD.statusId,
+                parentId    = purchaseD.parentId,
+                repeater    = purchaseD.repeater,
+                timestamp   = purchaseD.timestamp
+            )
+        }
+
+        fun purchaseDToPurchaseArray(arrayPurchasesD: Array<PurchaseD>): ArrayList<Purchase> {
+            val purchases = ArrayList<Purchase>()
+            for (e in arrayPurchasesD) {
+                purchases.add(purchaseDToPurchase(e))
+            }
+            return purchases
+        }
+        /********* ! mappers  ************/
+    }
+}

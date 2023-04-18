@@ -18,4 +18,46 @@ data class ProfitD(
     var timestamp  : Long    = Profit.DEFAULT_TIMESTAMP,
     var repeater   : Boolean = Profit.DEFAULT_REPEATER
 
-)
+){
+    companion object{
+
+        /*********** mappers  ************/
+        fun profitToProfitD(profit: Profit): ProfitD {
+            return ProfitD(
+                id          = profit.id         ,
+                name        = profit.name       ,
+                description = profit.description,
+                amount      = profit.amount     ,
+                periodId    = profit.periodId   ,
+                statusId    = profit.statusId     ,
+                date        = profit.date       ,
+                timestamp   = profit.timestamp  ,
+                repeater    = profit.repeater
+            )
+        }
+
+        fun profitDToProfit(profitD: ProfitD): Profit {
+            return Profit(
+                id          = profitD.id         ,
+                name        = profitD.name       ,
+                description = profitD.description,
+                amount      = profitD.amount     ,
+                periodId    = profitD.periodId   ,
+                statusId    = profitD.statusId     ,
+                date        = profitD.date       ,
+                timestamp   = profitD.timestamp  ,
+                repeater    = profitD.repeater
+
+            )
+        }
+
+        fun profitDToProfitArray(arrayProfitsD: Array<ProfitD>): ArrayList<Profit> {
+            val profits = ArrayList<Profit>()
+            for (e in arrayProfitsD) {
+                profits.add(profitDToProfit(e))
+            }
+            return profits
+        }
+        /********* ! mappers  ************/
+    }
+}

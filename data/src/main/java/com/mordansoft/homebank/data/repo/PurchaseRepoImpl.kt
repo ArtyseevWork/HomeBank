@@ -3,6 +3,9 @@ package com.mordansoft.homebank.data.repo
 
 import androidx.annotation.WorkerThread
 import com.mordansoft.homebank.data.model.PurchaseD
+import com.mordansoft.homebank.data.model.PurchaseD.Companion.purchaseDToPurchase
+import com.mordansoft.homebank.data.model.PurchaseD.Companion.purchaseDToPurchaseArray
+import com.mordansoft.homebank.data.model.PurchaseD.Companion.purchaseToPurchaseD
 import com.mordansoft.homebank.data.storage.PurchaseDao
 import com.mordansoft.homebank.data.storage.firebase.FdbStorageImpl
 import com.mordansoft.homebank.domain.model.Purchase
@@ -40,6 +43,18 @@ class PurchaseRepoImpl (private val purchaseDao      : PurchaseDao,
         return resultList
     }
 
+    override suspend fun getAllPurchases(): ArrayList<Purchase> {
+        var resultList: ArrayList<Purchase>
+        withContext(defaultDispatcher) {
+            resultList = purchaseDToPurchaseArray(purchaseDao.getAllPurchases());
+        }
+        return resultList
+    }
+
+    override suspend fun getAllId(): Array<Long> {
+        return purchaseDao.getAllId()
+    }
+
     override suspend fun insertPurchase(purchase: Purchase) {
         withContext(defaultDispatcher) {
             purchaseDao.insertAll(purchaseToPurchaseD(purchase))
@@ -47,13 +62,13 @@ class PurchaseRepoImpl (private val purchaseDao      : PurchaseDao,
     }
 
     override suspend fun insertTestPurchase(){
-        for ( i in 1..8){
+        /*for ( i in 1..8){
             try{
                 purchaseDao.insertAll(PurchaseD(id = i.toLong()))
             } catch (e: Exception){
                 println("$i - id already exist")
             }
-        }
+        }*/
     }
 
     override suspend fun getMainPurchases(
@@ -71,47 +86,17 @@ class PurchaseRepoImpl (private val purchaseDao      : PurchaseDao,
     }
 
     override suspend fun updateRemotePurchase(purchase: Purchase) {
-        FdbStorageImpl.updatePurchase(purchaseToPurchaseD(purchase))
-    }
-
-    /*********** mappers  ************/
-    private fun purchaseToPurchaseD(purchase: Purchase): PurchaseD {
-        return PurchaseD(
-            id          = purchase.id,
-            name        = purchase.name,
-            description = purchase.description,
-            price       = purchase.price,
-            count       = purchase.count,
-            periodId    = purchase.periodId,
-            statusId    = purchase.statusId,
-            parentId    = purchase.parentId,
-            repeater    = purchase.repeater,
-            timestamp   = purchase.timestamp
-        )
-    }
-
-    private fun purchaseDToPurchase(purchaseD: PurchaseD): Purchase {
-        return Purchase(
-            id          = purchaseD.id,
-            name        = purchaseD.name,
-            description = purchaseD.description,
-            price       = purchaseD.price,
-            count       = purchaseD.count,
-            periodId    = purchaseD.periodId,
-            statusId    = purchaseD.statusId,
-            parentId    = purchaseD.parentId,
-            repeater    = purchaseD.repeater,
-            timestamp   = purchaseD.timestamp
-        )
-    }
-
-    private fun purchaseDToPurchaseArray(arrayPurchasesD: Array<PurchaseD>): ArrayList<Purchase> {
-        val purchases = ArrayList<Purchase>()
-        for (e in arrayPurchasesD) {
-            purchases.add(purchaseDToPurchase(e))
+        val userId : String? = FdbStorageImpl.getUserId()
+        if (userId != null){
+            val dbPurchaseReference =
+                FdbStorageImpl.getReference(FdbStorageImpl.Folders.Purchase)
+            dbPurchaseReference
+                .child(purchase.id.toString())
+                .setValue(purchaseToPurchaseD(purchase))
         }
-        return purchases
+
     }
-    /********* ! mappers  ************/
+
+
 
 }

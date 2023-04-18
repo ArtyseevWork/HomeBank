@@ -4,6 +4,8 @@ import com.mordansoft.homebank.domain.repo.*
 import com.mordansoft.homebank.domain.usecase.exchange_rates.GetExchangeRatesUc
 import com.mordansoft.homebank.domain.usecase.period.GetPeriodAccountingUc
 import com.mordansoft.homebank.domain.usecase.period.GetPeriodUc
+import com.mordansoft.homebank.domain.usecase.period.PeriodSyncUc
+import com.mordansoft.homebank.domain.usecase.preferences.PreferencesSyncUc
 import com.mordansoft.homebank.domain.usecase.profit.*
 import com.mordansoft.homebank.domain.usecase.purchase.*
 import dagger.Module
@@ -84,6 +86,26 @@ class DomainModule {
                                   preferencesRepo: PreferencesRepo) : GetExchangeRatesUc {
         return GetExchangeRatesUc(exchangeRepo    = exchangeRepo,
                                   preferencesRepo = preferencesRepo)
+    }
+
+    @Provides
+    fun provideProfitSyncUc(profitRepo : ProfitRepo) : ProfitSyncUc {
+        return ProfitSyncUc(profitRepo = profitRepo)
+    }
+
+    @Provides
+    fun providePurchaseSyncUc(purchaseRepo : PurchaseRepo) : PurchaseSyncUc {
+        return PurchaseSyncUc(purchaseRepo = purchaseRepo)
+    }
+
+    @Provides
+    fun providePeriodSyncUc(periodRepo : PeriodRepo) : PeriodSyncUc {
+        return PeriodSyncUc(periodRepo = periodRepo)
+    }
+
+    @Provides
+    fun providePreferencesSyncUc(preferencesRepo : PreferencesRepo) : PreferencesSyncUc {
+        return PreferencesSyncUc(preferencesRepo = preferencesRepo)
     }
 
 

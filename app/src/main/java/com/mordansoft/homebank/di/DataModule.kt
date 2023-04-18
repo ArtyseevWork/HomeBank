@@ -4,7 +4,15 @@ import android.content.Context
 import com.mordansoft.homebank.app.App
 import com.mordansoft.homebank.data.repo.*
 import com.mordansoft.homebank.data.storage.*
+import com.mordansoft.homebank.data.storage.firebase.ChildPeriodListener
+import com.mordansoft.homebank.data.storage.firebase.ChildPreferencesListener
+import com.mordansoft.homebank.data.storage.firebase.ChildProfitListener
+import com.mordansoft.homebank.data.storage.firebase.ChildPurchaseListener
 import com.mordansoft.homebank.domain.repo.*
+import com.mordansoft.homebank.domain.usecase.period.PeriodSyncUc
+import com.mordansoft.homebank.domain.usecase.preferences.PreferencesSyncUc
+import com.mordansoft.homebank.domain.usecase.profit.ProfitSyncUc
+import com.mordansoft.homebank.domain.usecase.purchase.PurchaseSyncUc
 import dagger.Module
 import dagger.Provides
 
@@ -30,9 +38,6 @@ class DataModule {
     fun providePeriodDao(appDatabase: AppDatabase) : PeriodDao {
         return appDatabase.periodDao()
     }
-
-
-
     /**** ! Storage implementations (Dao's) *******/
 
 
@@ -68,5 +73,26 @@ class DataModule {
     fun provideAppDatabase(context: Context): AppDatabase{
         return AppDatabase.getDatabase(context)
     }
+
+
+    @Provides
+    fun provideChildPurchaseListener(purchaseSyncUc : PurchaseSyncUc) : ChildPurchaseListener {
+        return ChildPurchaseListener(purchaseSyncUc = purchaseSyncUc)
+    }
+
+    @Provides
+    fun provideChildProfitListener(profitSyncUc : ProfitSyncUc) : ChildProfitListener {
+        return ChildProfitListener(profitSyncUc = profitSyncUc)
+    }
+    @Provides
+    fun provideChildPeriodListener(periodSyncUc : PeriodSyncUc) : ChildPeriodListener {
+        return ChildPeriodListener(periodSyncUc = periodSyncUc)
+    }
+    @Provides
+    fun provideChildPreferencesListener(preferencesSyncUc : PreferencesSyncUc) : ChildPreferencesListener {
+        return ChildPreferencesListener(preferencesSyncUc = preferencesSyncUc)
+    }
+
+
 
 }

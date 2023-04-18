@@ -1,6 +1,9 @@
 package com.mordansoft.homebank.data.repo
 
 import com.mordansoft.homebank.data.model.ProfitD
+import com.mordansoft.homebank.data.model.ProfitD.Companion.profitDToProfit
+import com.mordansoft.homebank.data.model.ProfitD.Companion.profitDToProfitArray
+import com.mordansoft.homebank.data.model.ProfitD.Companion.profitToProfitD
 import com.mordansoft.homebank.data.storage.ProfitDao
 import com.mordansoft.homebank.data.storage.firebase.FdbStorageImpl
 import com.mordansoft.homebank.domain.model.Profit
@@ -23,19 +26,32 @@ class ProfitRepoImpl (private val profitDao: ProfitDao,
         return resultList
     }
 
+    override suspend fun getAllProfits(): ArrayList<Profit> {
+        var resultList: ArrayList<Profit>
+        withContext(defaultDispatcher) {
+            resultList = profitDToProfitArray(profitDao.getAllProfits())
+        }
+        return resultList
+    }
+
+    override suspend fun getAllId(): Array<Long> {
+        return profitDao.getAllId()
+    }
+
     override suspend fun getProfitById(profitId: Long): Profit {
+
         return profitDToProfit(profitDao.getProfitById(profitId));
     }
 
 
     override suspend fun insertTestProfit(){
-        for ( i in 1..10){
+        /*for ( i in 1..10){
             try{
                 profitDao.insertAll(ProfitD(id = i.toLong()))
             } catch (e: Exception){
                 println("$i - id already exist")
             }
-        }
+        }*/
     }
 
     override suspend fun insertProfit(profit: Profit) {
@@ -45,48 +61,16 @@ class ProfitRepoImpl (private val profitDao: ProfitDao,
     }
 
 
-    override suspend fun updateRemoteProfit(profit: Profit) {
-        FdbStorageImpl.updateProfit(profitToProfitD(profit))
-    }
-
-
-    /*********** mappers  ************/
-    private fun profitToProfitD(profit: Profit): ProfitD {
-        return ProfitD(
-            id          = profit.id         ,
-            name        = profit.name       ,
-            description = profit.description,
-            amount      = profit.amount     ,
-            periodId    = profit.periodId   ,
-            statusId    = profit.statusId     ,
-            date        = profit.date       ,
-            timestamp   = profit.timestamp  ,
-            repeater    = profit.repeater
-        )
-    }
-
-    private fun profitDToProfit(profitD: ProfitD): Profit {
-        return Profit(
-            id          = profitD.id         ,
-            name        = profitD.name       ,
-            description = profitD.description,
-            amount      = profitD.amount     ,
-            periodId    = profitD.periodId   ,
-            statusId    = profitD.statusId     ,
-            date        = profitD.date       ,
-            timestamp   = profitD.timestamp  ,
-            repeater    = profitD.repeater
-
-        )
-    }
-
-    private fun profitDToProfitArray(arrayProfitsD: Array<ProfitD>): ArrayList<Profit> {
-        val profits = ArrayList<Profit>()
-        for (e in arrayProfitsD) {
-            profits.add(profitDToProfit(e))
+    override fun updateRemoteProfit(profit: Profit) {
+        val userId : String? = FdbStorageImpl.getUserId()
+        if (userId != null){
+            val dbProfitReference = FdbStorageImpl.getReference(FdbStorageImpl.Folders.Profit)
+            dbProfitReference
+                .child(profit.id.toString())
+                .setValue(profitToProfitD(profit))
         }
-        return profits
     }
-    /********* ! mappers  ************/
+
+
 
 }

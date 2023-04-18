@@ -7,6 +7,11 @@ import com.mordansoft.homebank.data.model.PeriodD
 @Dao
 interface PeriodDao {
 
+    @Query("SELECT * FROM period")
+    suspend fun getAllPeriods(): Array<PeriodD>
+    @Query("SELECT id FROM period")
+    suspend fun getAllId(): Array<Int>
+
     @Query("SELECT * FROM period where statusId = :statusId")
     suspend fun getPeriodsByStatus(statusId: Int): Array<PeriodD>
 
